@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odkryj Świat Rasowych Kotów</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a96e;--gold-light:#e8d5b0;--dark:#1a1410;--dark2:#2d1f10;--warm:#8b6f47;--cream:#fdf9f4;--cream2:#f5efe6;--cream3:#ede4d6;--text:#1a1410;--text2:#5a4a35;--text3:#9a8a75;--border:#ddd3c0;--radius:14px;--shadow:0 4px 24px rgba(26,20,16,0.08);--font-display:'Playfair Display',Georgia,serif;--font-body:'Lato',sans-serif;--heart-gray:#ccc;--heart-red:#e74c3c}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);line-height:1.7;font-size:16px}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--gold);text-decoration:none}a:hover{color:var(--warm)}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.25;color:var(--text)}
+h1{font-size:clamp(2rem,5vw,3.5rem)}h2{font-size:clamp(1.5rem,3vw,2.2rem)}h3{font-size:clamp(1.1rem,2vw,1.4rem)}
+p{margin-bottom:1rem}p:last-child{margin-bottom:0}
+
+/* ── SCROLL PROGRESS ── */
+.scroll-progress{position:fixed;top:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:200;transition:width .1s linear}
+
+/* ── BACK TO TOP ── */
+.back-top{position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;background:var(--gold);color:var(--dark);border:none;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:150;opacity:0;pointer-events:none;transition:all .3s;box-shadow:0 4px 12px rgba(201,169,110,.4);display:flex;align-items:center;justify-content:center}
+.back-top.visible{opacity:1;pointer-events:all}
+.back-top:hover{transform:translateY(-3px);background:var(--gold-light)}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;top:80px;right:1.5rem;z-index:500;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--dark);color:#f9f5ef;border-left:3px solid var(--gold);border-radius:8px;padding:.65rem 1rem;font-size:.84rem;min-width:200px;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none;opacity:0;transform:translateX(30px);transition:all .3s ease}
+.toast.show{opacity:1;transform:translateX(0)}
+.toast.hide{opacity:0;transform:translateX(30px)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .55s ease,transform .55s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .55s ease,transform .55s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ── NAV ── */
+.nav{position:fixed;top:3px;left:0;right:0;z-index:100;background:rgba(253,249,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:var(--font-display);font-size:1.3rem;color:var(--dark);display:flex;align-items:center;gap:.5rem}.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:1.5rem;list-style:none;align-items:center}.nav-links a{font-size:.88rem;color:var(--text2);letter-spacing:.04em;transition:color .2s}.nav-links a:hover{color:var(--gold)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--text)}
+.nav-fav-link{display:flex;align-items:center;gap:.4rem;background:rgba(231,76,60,0.08);border:1.5px solid rgba(231,76,60,0.25);border-radius:20px;padding:.3rem .9rem!important;color:#e74c3c!important;font-weight:700!important;transition:all .2s!important}
+.nav-fav-link:hover{background:rgba(231,76,60,0.15)!important;color:#e74c3c!important}
+.nav-fav-count{background:#e74c3c;color:white;border-radius:50%;width:18px;height:18px;font-size:.7rem;display:none;align-items:center;justify-content:center;font-weight:700;transition:transform .3s}
+.nav-fav-count.visible{display:inline-flex}
+.nav-fav-count.bump{transform:scale(1.4)}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(253,249,244,0.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1.5rem 2rem;flex-direction:column;gap:1rem;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1rem;color:var(--text2);padding:.5rem 0;border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:none}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+.section{padding:5rem 0}.section--alt{background:var(--cream2)}
+.section-label{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;font-weight:700}
+.section-title{margin-bottom:1rem}.section-subtitle{color:var(--text2);font-size:1.05rem;max-width:600px;margin-bottom:3rem}
+.divider{width:48px;height:2px;background:var(--gold);margin:1.25rem 0 2rem}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--dark);display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 70% 50%,rgba(201,169,110,0.12) 0%,transparent 70%)}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;z-index:1}
+.hero-tag{display:inline-block;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.3);color:var(--gold);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:.4rem 1rem;border-radius:20px;margin-bottom:1.5rem;animation:fadeInDown .6s ease both}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{color:#f9f5ef;margin-bottom:1.5rem}
+/* typewriter wrapper */
+.typewriter-wrap{overflow:hidden}
+.typewriter-word{display:inline-block;opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease}
+.typewriter-word.show{opacity:1;transform:translateY(0)}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-desc{color:rgba(249,245,239,0.7);font-size:1.05rem;margin-bottom:2.5rem;max-width:480px;opacity:0;animation:fadeUp .7s .5s ease forwards}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp .7s .7s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:var(--font-body);text-decoration:none}
+.btn-primary{background:var(--gold);color:var(--dark)}.btn-primary:hover{background:var(--gold-light);color:var(--dark);transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,169,110,.35)}
+.btn-outline{background:transparent;color:#f9f5ef;border:1.5px solid rgba(249,245,239,0.3)}.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.08);opacity:0;animation:fadeUp .7s .9s ease forwards}
+.hero-stat-num{font-family:var(--font-display);font-size:1.8rem;color:var(--gold);display:block}
+.hero-stat-lbl{font-size:.78rem;color:rgba(249,245,239,0.5);letter-spacing:.05em}
+.hero-img-wrap{position:relative;opacity:0;animation:fadeLeft .8s .4s ease forwards}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.hero-img-wrap img{border-radius:var(--radius);width:100%;aspect-ratio:4/5;object-fit:cover}
+.hero-img-badge{position:absolute;bottom:-1.5rem;left:-1.5rem;background:var(--gold);color:var(--dark);padding:1rem 1.25rem;border-radius:var(--radius);font-family:var(--font-display);font-size:.95rem;box-shadow:var(--shadow)}.hero-img-badge strong{display:block;font-size:1.4rem}
+/* parallax */
+.hero-parallax{will-change:transform;transition:transform .1s linear}
+
+/* ── STATS STRIP ── */
+.stats-strip{background:var(--dark2);padding:3rem 0}.stats-strip-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.stat-item{text-align:center}.stat-num{font-family:var(--font-display);font-size:2.2rem;color:var(--gold);display:block;margin-bottom:.2rem}
+.stat-lbl{font-size:.85rem;color:rgba(249,245,239,0.6)}
+
+/* ── WHY ── */
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.why-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:box-shadow .25s,transform .25s}
+.why-card:hover{box-shadow:0 12px 32px rgba(26,20,16,0.12);transform:translateY(-4px)}
+.why-icon{font-size:2rem;margin-bottom:1rem}.why-card h3{margin-bottom:.5rem;font-size:1.05rem}.why-card p{font-size:.9rem;color:var(--text2)}
+
+/* ── AI CHAT ── */
+.ai-section{background:var(--dark);padding:5rem 0}
+.ai-inner{display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:start}
+.ai-info h2{color:#f9f5ef;margin-bottom:1rem}
+.ai-info p{color:rgba(249,245,239,0.65);font-size:.95rem;line-height:1.75;margin-bottom:1rem}
+.ai-features{list-style:none;margin-top:1.5rem}
+.ai-features li{color:rgba(249,245,239,0.6);font-size:.88rem;padding:.4rem 0}
+.ai-features li::before{content:'✦ ';color:var(--gold)}
+.ai-chat-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);display:flex;flex-direction:column;height:520px}
+.ai-chat-header{padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:.75rem}
+.ai-chat-header .ai-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ai-chat-header .ai-name{font-size:.92rem;color:#f9f5ef;font-weight:700}
+.ai-chat-header .ai-status{font-size:.75rem;color:var(--gold);display:flex;align-items:center;gap:4px}
+/* pulsujący dot AI */
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;animation:aiPulse 1.8s ease-in-out infinite}
+@keyframes aiPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.ai-messages{flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.msg{max-width:85%;padding:.75rem 1rem;border-radius:12px;font-size:.88rem;line-height:1.6;animation:msgPop .25s ease}
+@keyframes msgPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-ai{background:rgba(255,255,255,0.07);color:rgba(249,245,239,0.85);align-self:flex-start;border-bottom-left-radius:4px}
+.msg-user{background:rgba(201,169,110,0.2);color:rgba(249,245,239,0.9);align-self:flex-end;border-bottom-right-radius:4px;border:1px solid rgba(201,169,110,0.25)}
+.msg-typing{display:flex;gap:4px;align-items:center;padding:.75rem 1rem}
+.msg-typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);animation:typing 1.2s infinite}
+.msg-typing span:nth-child(2){animation-delay:.2s}.msg-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-6px);opacity:1}}
+.ai-quick-btns{padding:.75rem 1.25rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.06)}
+.ai-quick-btn{padding:.3rem .75rem;border:1px solid rgba(201,169,110,0.3);border-radius:20px;background:transparent;color:var(--gold);font-size:.75rem;cursor:pointer;font-family:var(--font-body);transition:all .2s;white-space:nowrap}
+.ai-quick-btn:hover{background:rgba(201,169,110,0.15);transform:translateY(-1px)}
+.ai-input-row{padding:.75rem 1rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:.5rem}
+.ai-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:.6rem 1rem;color:#f9f5ef;font-size:.88rem;font-family:var(--font-body)}
+.ai-input:focus{outline:none;border-color:var(--gold)}
+.ai-input::placeholder{color:rgba(255,255,255,0.25)}
+.ai-send{background:var(--gold);color:var(--dark);border:none;border-radius:8px;padding:.6rem 1rem;cursor:pointer;font-size:1rem;transition:all .2s}
+.ai-send:hover{background:var(--gold-light);transform:scale(1.08)}.ai-send:disabled{opacity:.4;cursor:not-allowed}
+.ai-history-btn{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(249,245,239,0.5);border-radius:6px;padding:.35rem .75rem;font-size:.75rem;cursor:pointer;font-family:var(--font-body);margin-left:auto;transition:all .2s}
+.ai-history-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── HEARTS ── */
+.heart-btn{background:none;border:none;cursor:pointer;font-size:1.35rem;line-height:1;padding:4px;transition:transform .15s ease,color .2s;color:var(--heart-gray);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.heart-btn:hover{transform:scale(1.25)}
+.heart-btn.liked{color:var(--heart-red)}
+.heart-btn.liked:hover{transform:scale(1.15)}
+@keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.6)}70%{transform:scale(.85)}100%{transform:scale(1)}}
+.heart-btn.pop{animation:heartPop .4s ease forwards}
+
+/* ── COMPARE CHECK ── */
+.compare-check-wrap{display:flex;align-items:center;gap:.35rem;margin-top:.5rem}
+.compare-check-wrap input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
+.compare-check-wrap label{font-size:.72rem;color:var(--text3);cursor:pointer}
+.compare-check-wrap input:checked+label{color:var(--gold)}
+
+/* ── COMPARE BAR ── */
+.compare-bar{position:fixed;bottom:0;left:0;right:0;background:var(--dark);border-top:2px solid var(--gold);padding:.85rem 2rem;display:none;align-items:center;justify-content:space-between;gap:1rem;z-index:120;flex-wrap:wrap;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.compare-bar.visible{display:flex}
+.compare-bar-slots{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.compare-slot{background:rgba(255,255,255,0.06);border:1px solid rgba(201,169,110,0.3);border-radius:8px;padding:.4rem .9rem;font-size:.82rem;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.compare-slot .rm-slot{background:none;border:none;color:rgba(249,245,239,0.4);cursor:pointer;font-size:.9rem;line-height:1;padding:0}
+.compare-slot .rm-slot:hover{color:#e74c3c}
+.compare-bar-lbl{font-size:.8rem;color:rgba(249,245,239,0.5)}
+.compare-bar-actions{display:flex;gap:.5rem}
+.btn-compare-go{background:var(--gold);color:var(--dark);border:none;border-radius:8px;padding:.55rem 1.25rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.btn-compare-go:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,169,110,.4)}
+.btn-compare-clear{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(249,245,239,0.5);border-radius:8px;padding:.55rem 1rem;font-size:.85rem;cursor:pointer;font-family:var(--font-body)}
+
+/* ── COMPARE MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;opacity:0;visibility:hidden;transition:.3s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal-box{background:var(--cream);border-radius:var(--radius);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);transform:translateY(16px) scale(.97);transition:transform .3s ease}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1)}
+.modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--cream);z-index:1}
+.modal-header h3{font-family:var(--font-display)}
+.modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text3);transition:transform .2s}
+.modal-close:hover{transform:rotate(90deg)}
+.modal-body{padding:1.5rem}
+.cmp-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.cmp-table th{background:var(--dark);color:var(--gold);padding:.75rem 1rem;text-align:left;font-size:.78rem;letter-spacing:.06em}
+.cmp-table td{padding:.75rem 1rem;border-bottom:1px solid var(--border);vertical-align:top}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table tr:nth-child(even) td{background:var(--cream2)}
+.cmp-bar-inline{display:inline-flex;gap:2px}
+.cmp-bar-inline span{width:8px;height:8px;border-radius:2px;background:var(--cream3)}
+.cmp-bar-inline span.fill{background:var(--gold)}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+.lightbox.open{display:flex}
+.lightbox-inner{position:relative;max-width:800px;width:100%;text-align:center}
+.lightbox img{max-height:80vh;border-radius:10px;object-fit:contain;width:100%;transition:opacity .2s}
+.lightbox-close{position:absolute;top:-2rem;right:0;background:none;border:none;color:white;font-size:2rem;cursor:pointer;opacity:.6;transition:all .2s}
+.lightbox-close:hover{opacity:1;transform:rotate(90deg)}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);color:white;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.lightbox-nav:hover{background:rgba(201,169,110,0.4)}
+.lightbox-nav.prev{left:-3.5rem}.lightbox-nav.next{right:-3.5rem}
+.lightbox-caption{color:rgba(255,255,255,0.6);font-size:.82rem;margin-top:.75rem}
+
+/* ── BREEDS ── */
+.breeds-full-section{background:var(--cream);padding:5rem 0}
+.breeds-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.bf-btn{padding:.45rem 1.1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--text2);font-size:.82rem;cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.bf-btn:hover{border-color:var(--gold);color:var(--gold)}
+.bf-btn.active{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.budget-filter{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;padding:.85rem 1rem;background:var(--cream2);border-radius:10px;border:1px solid var(--border)}
+.budget-filter label{font-size:.82rem;color:var(--text2);font-weight:700;white-space:nowrap}
+.budget-filter input[type=range]{flex:1;min-width:120px;accent-color:var(--gold)}
+.budget-filter .budget-val{font-size:.82rem;color:var(--gold);font-weight:700;white-space:nowrap}
+.budget-filter .budget-reset{padding:.3rem .75rem;border:1px solid var(--border);border-radius:6px;background:transparent;font-size:.75rem;cursor:pointer;color:var(--text3);font-family:var(--font-body)}
+.budget-filter .budget-reset:hover{border-color:var(--gold);color:var(--gold)}
+.breeds-search-bar{position:relative;margin-bottom:1rem}
+.breeds-search-bar input{width:100%;padding:.85rem 1rem .85rem 3rem;border:1.5px solid var(--border);border-radius:10px;background:white;font-size:.95rem;font-family:var(--font-body);color:var(--text);transition:border-color .2s}
+.breeds-search-bar input:focus{outline:none;border-color:var(--gold)}
+.breeds-search-bar .si{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:1.1rem}
+.breeds-count{font-size:.85rem;color:var(--text3);margin-bottom:1.5rem}
+.breeds-mega-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
+
+/* ── RECENTLY VIEWED ── */
+.recently-viewed{margin-bottom:1.5rem;display:none}
+.recently-viewed.show{display:block}
+.rv-label{font-size:.78rem;color:var(--text3);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.rv-chips{display:flex;gap:6px;flex-wrap:wrap}
+.rv-chip{padding:.25rem .75rem;background:var(--cream2);border:1px solid var(--border);border-radius:20px;font-size:.75rem;color:var(--text2);cursor:pointer;transition:all .2s}
+.rv-chip:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── SKELETON ── */
+@keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}
+.skeleton{background:linear-gradient(90deg,var(--cream3) 25%,var(--cream2) 50%,var(--cream3) 75%);background-size:2000px 100%;animation:shimmer 1.5s infinite}
+.bmc-skeleton{border-radius:var(--radius);height:320px}
+
+/* ── BREED CARDS ── */
+.bmc{background:white;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s;will-change:transform}
+.bmc:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--gold-light)}
+.bmc.compare-selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,169,110,0.3)}
+.bmc-gallery{position:relative;height:200px;overflow:hidden;background:var(--cream3);cursor:pointer}
+.bmc-gallery-main{width:100%;height:100%;object-fit:cover;transition:transform .4s ease,opacity .3s}
+.bmc:hover .bmc-gallery-main{transform:scale(1.04)}
+.bmc-gallery-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px}
+.bmc-gallery-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:background .2s}
+.bmc-gallery-dot.active{background:white}
+.bmc-gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);color:white;border:none;border-radius:50%;width:28px;height:28px;font-size:.85rem;cursor:pointer;opacity:0;transition:opacity .2s;display:flex;align-items:center;justify-content:center}
+.bmc:hover .bmc-gallery-nav{opacity:1}
+.bmc-gallery-nav.prev{left:6px}.bmc-gallery-nav.next{right:6px}
+.bmc-img-counter{position:absolute;top:6px;right:8px;background:rgba(0,0,0,0.5);color:white;font-size:.68rem;padding:.15rem .45rem;border-radius:10px}
+.bmc-lightbox-hint{position:absolute;top:6px;left:8px;background:rgba(0,0,0,0.45);color:white;font-size:.65rem;padding:.15rem .45rem;border-radius:10px;opacity:0;transition:.2s}
+.bmc:hover .bmc-lightbox-hint{opacity:1}
+.bmc-body{padding:.85rem 1rem .6rem}
+.bmc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.25rem}
+.bmc-header h3{font-size:.95rem;line-height:1.3;flex:1;cursor:pointer}
+.bmc-origin{font-size:.75rem;color:var(--gold);margin-bottom:.4rem}
+.bmc-desc{font-size:.8rem;color:var(--text2);line-height:1.5;margin-bottom:.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.bmc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.bmc-tag{font-size:.68rem;padding:.15rem .5rem;border-radius:10px;background:var(--cream3);color:var(--warm);transition:background .2s}
+.bmc-tag:hover{background:var(--gold-light)}
+.bmc-expanded{display:none;padding:1rem;border-top:1px solid var(--border)}
+.bmc-expanded.open{display:block;animation:expandIn .2s ease}
+@keyframes expandIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.bmc-bars{margin-bottom:.75rem}
+.bmc-bar-row{margin-bottom:.5rem}
+.bmc-bar-lbl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--text3);margin-bottom:.2rem}
+.bmc-bar-bg{background:var(--cream3);border-radius:3px;height:5px;overflow:hidden}
+.bmc-bar-fill{height:100%;background:var(--gold);border-radius:3px;width:0;transition:width .7s ease}
+.bmc-bar-fill.animated{width:var(--target-width)!important}
+.bmc-price{font-size:.8rem;color:var(--text2);margin-top:.5rem}.bmc-price strong{color:var(--warm)}
+.no-results{text-align:center;padding:3rem;color:var(--text3);grid-column:1/-1}
+
+/* search highlight */
+.hl{background:rgba(201,169,110,0.3);border-radius:2px}
+
+/* ── FAVORITES ── */
+.fav-section{background:var(--cream2);padding:5rem 0}
+.fav-section.hidden{display:none}
+.fav-empty{text-align:center;padding:4rem 2rem;color:var(--text3)}
+.fav-empty .fav-empty-icon{font-size:4rem;margin-bottom:1rem}
+.fav-empty h3{color:var(--text2);margin-bottom:.5rem;font-size:1.2rem}
+.fav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
+.fav-export-btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--dark);color:var(--gold);border:1.5px solid var(--gold);border-radius:8px;padding:.6rem 1.2rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font-body);margin-bottom:1.5rem;transition:all .2s}
+.fav-export-btn:hover{background:var(--gold);color:var(--dark);transform:translateY(-2px)}
+
+/* ── POLSKA ── */
+.polska-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem}
+.polska-left .breed-rank{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)}.polska-left .breed-rank:last-child{border-bottom:none}
+.rank-num{font-family:var(--font-display);font-size:1.8rem;color:var(--gold-light);min-width:2.5rem}
+.rank-info h4{font-size:.95rem;margin-bottom:.2rem}.rank-info p{font-size:.82rem;color:var(--text2);margin:0}
+.polska-right{background:var(--dark);color:white;border-radius:var(--radius);padding:2rem}.polska-right h3{color:var(--gold);margin-bottom:1.25rem}.polska-right ul{list-style:none}
+.polska-right li{padding:.4rem 0;font-size:.9rem;color:rgba(249,245,239,0.75);border-bottom:1px solid rgba(255,255,255,0.06)}.polska-right li::before{content:'✦ ';color:var(--gold);font-size:.7rem}
+
+/* ── NAJDROŻSZE ── */
+.expensive-section{background:var(--dark);padding:5rem 0}
+.expensive-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:2rem}
+.exp-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:1.25rem;text-align:center;transition:all .25s;cursor:default}
+.exp-card:hover{border-color:var(--gold);background:rgba(201,169,110,0.06);transform:translateY(-4px)}
+.exp-rank{font-family:var(--font-display);font-size:.75rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.5rem}
+.exp-emoji{font-size:2.5rem;margin-bottom:.5rem;display:block;transition:transform .3s}
+.exp-card:hover .exp-emoji{transform:scale(1.15) rotate(-5deg)}
+.exp-name{font-size:.88rem;color:#f9f5ef;font-weight:700;margin-bottom:.4rem;font-family:var(--font-display)}
+.exp-price{font-size:.78rem;color:var(--gold);margin-bottom:.25rem}
+.exp-sub{font-size:.72rem;color:rgba(249,245,239,0.35)}
+
+/* ── GUIDE ── */
+.guide-steps{counter-reset:guide}
+.guide-step{display:flex;gap:1.5rem;margin-bottom:2rem}
+.guide-step-num{font-family:var(--font-display);font-size:3rem;color:var(--gold-light);line-height:1;flex-shrink:0;min-width:3rem}
+.guide-step-body h3{font-size:1rem;margin-bottom:.4rem}.guide-step-body p{font-size:.88rem;color:var(--text2);margin:0}
+.guide-step-body ul{margin-top:.5rem;padding-left:1.2rem;font-size:.85rem;color:var(--text2)}
+.profiles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+.profile-card{background:var(--dark);color:white;border-radius:var(--radius);padding:1.5rem;transition:transform .25s}
+.profile-card:hover{transform:translateY(-4px)}
+.profile-card h4{color:var(--gold);margin-bottom:.75rem;font-size:.95rem}.profile-card ul{list-style:none}
+.profile-card li{font-size:.84rem;color:rgba(249,245,239,0.75);padding:.2rem 0}.profile-card li::before{content:'→ ';color:var(--gold)}
+
+/* ── TOOLS ── */
+#tools{background:var(--dark)}#tools .section-label{color:var(--gold)}#tools .section-title{color:#f9f5ef}#tools .section-subtitle{color:rgba(249,245,239,0.6)}
+.tools-tabs{display:flex;gap:6px;margin-bottom:2rem;flex-wrap:wrap}
+.tool-tab{padding:.55rem 1.2rem;border-radius:20px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;cursor:pointer;font-size:.84rem;font-weight:700;color:rgba(249,245,239,0.5);transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.tool-tab:hover{border-color:var(--gold);color:var(--gold)}.tool-tab.active{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.tool-panel{display:none}.tool-panel.active{display:block;animation:fadeUp .3s ease}.tool-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:2rem}
+
+/* ── QUIZ ── */
+.q-prog{display:flex;gap:4px;margin-bottom:1.5rem}.q-dot{height:4px;flex:1;border-radius:2px;background:rgba(255,255,255,0.1);transition:background .3s}.q-dot.done{background:var(--gold)}
+.q-num{font-size:.75rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+.q-text{font-family:var(--font-display);font-size:1.25rem;color:#f9f5ef;margin-bottom:1.25rem}
+.q-opts{display:grid;gap:10px}
+.q-opt{padding:.85rem 1.25rem;border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer;font-size:.9rem;background:transparent;color:rgba(249,245,239,0.8);text-align:left;font-family:var(--font-body);transition:all .2s}
+.q-opt:hover{border-color:var(--gold);color:#f9f5ef;background:rgba(201,169,110,0.08);transform:translateX(4px)}.q-opt.sel{border-color:var(--gold);background:rgba(201,169,110,0.15);color:var(--gold)}
+.quiz-result{text-align:center;padding:1rem 0}.quiz-result-emoji{font-size:4rem;margin-bottom:1rem;display:block;animation:bounceIn .5s ease}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.quiz-result h3{font-family:var(--font-display);font-size:2rem;color:var(--gold);margin-bottom:.5rem}.quiz-result p{color:rgba(249,245,239,0.7);margin-bottom:1.5rem}
+.result-traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.5rem}
+.result-trait{padding:.3rem .9rem;border:1px solid rgba(201,169,110,0.4);border-radius:20px;font-size:.8rem;color:var(--gold)}
+.btn-retake{background:transparent;border:1.5px solid var(--gold);color:var(--gold);padding:.65rem 1.5rem;border-radius:8px;cursor:pointer;font-family:var(--font-body);font-size:.88rem;transition:all .2s}
+.btn-retake:hover{background:var(--gold);color:var(--dark)}
+
+/* ── SEARCH TOOL ── */
+.search-input-wrap{position:relative;margin-bottom:1rem}.search-input-wrap input{width:100%;padding:.85rem 1rem .85rem 3rem;border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;background:rgba(255,255,255,0.04);color:#f9f5ef;font-size:.92rem;font-family:var(--font-body)}
+.search-input-wrap input::placeholder{color:rgba(255,255,255,0.3)}.search-input-wrap input:focus{outline:none;border-color:var(--gold)}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:1.1rem;opacity:.4}
+.s-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}.s-filter{padding:.35rem .85rem;border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:.78rem;cursor:pointer;background:transparent;color:rgba(249,245,239,0.5);transition:all .2s;font-family:var(--font-body)}
+.s-filter.active{background:rgba(201,169,110,0.15);color:var(--gold);border-color:rgba(201,169,110,0.4)}
+.s-breed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}.s-breed-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem;cursor:pointer;transition:all .2s}.s-breed-card:hover{border-color:var(--gold);background:rgba(201,169,110,0.06);transform:translateY(-2px)}
+.s-breed-card .sbc-emoji{font-size:1.6rem;margin-bottom:.4rem}.s-breed-card .sbc-name{font-size:.88rem;color:#f9f5ef;font-weight:700;margin-bottom:.25rem}
+.s-breed-card .sbc-sub{font-size:.75rem;color:rgba(249,245,239,0.4)}.s-breed-card .sbc-stars{color:var(--gold);font-size:.7rem;margin-top:.35rem}
+
+/* ── CALCULATOR ── */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}.calc-field label{display:block;font-size:.78rem;color:rgba(249,245,239,0.5);margin-bottom:.4rem;letter-spacing:.04em}
+.calc-field select,.calc-field input[type=number]{width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;background:rgba(255,255,255,0.04);color:#f9f5ef;font-size:.88rem;font-family:var(--font-body)}.calc-field select:focus,.calc-field input:focus{outline:none;border-color:var(--gold)}
+.calc-mode{display:flex;gap:6px;margin-bottom:1.5rem}.calc-mode-btn{padding:.4rem 1rem;border:1px solid rgba(255,255,255,0.12);border-radius:20px;background:transparent;color:rgba(249,245,239,0.5);font-size:.82rem;cursor:pointer;font-family:var(--font-body);transition:all .2s}.calc-mode-btn.active{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.cost-rows{background:rgba(255,255,255,0.03);border-radius:10px;overflow:hidden}
+.cost-row{display:flex;justify-content:space-between;padding:.85rem 1.25rem;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,0.05);transition:background .2s}
+.cost-row:hover{background:rgba(255,255,255,0.04)}
+.cost-row:last-child{border-bottom:none;background:rgba(201,169,110,0.1)}
+.cost-row .cr-label{color:rgba(249,245,239,0.6)}.cost-row .cr-val{color:var(--gold);font-weight:700}
+.cost-row:last-child .cr-label,.cost-row:last-child .cr-val{color:#f9f5ef;font-size:1rem}
+.calc-note{font-size:.78rem;color:rgba(249,245,239,0.3);margin-top:1rem;line-height:1.6}
+
+/* ── HODOWLE ── */
+.hod-note{background:rgba(201,169,110,0.08);border-left:3px solid var(--gold);padding:1rem 1.25rem;border-radius:0 8px 8px 0;font-size:.85rem;color:rgba(249,245,239,0.65);margin-bottom:1.5rem;line-height:1.6}
+.hod-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}.hod-list{display:flex;flex-direction:column;gap:.75rem}
+.hod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:all .2s}
+.hod-card:hover{border-color:rgba(201,169,110,0.3);background:rgba(255,255,255,0.06)}
+.hod-card .hc-name{font-size:.95rem;color:#f9f5ef;font-weight:700;margin-bottom:.2rem}.hod-card .hc-breed{font-size:.8rem;color:var(--gold);margin-bottom:.2rem}.hod-card .hc-loc{font-size:.78rem;color:rgba(249,245,239,0.4)}
+.hod-right{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0}
+.fed-badge{font-size:.72rem;padding:.2rem .65rem;border-radius:20px;font-weight:700}.fed-fife{background:rgba(45,106,79,.3);color:#6fcf97;border:1px solid rgba(45,106,79,.4)}.fed-tica{background:rgba(45,80,160,.3);color:#74b0f5;border:1px solid rgba(45,80,160,.4)}.fed-wcf{background:rgba(120,60,180,.3);color:#c08ef5;border:1px solid rgba(120,60,180,.4)}
+
+/* ── RASA DNIA ── */
+.rod-inner{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}.rod-left{text-align:center}
+.rod-emoji{font-size:5rem;margin-bottom:.75rem;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.rod-name{font-family:var(--font-display);font-size:2rem;color:var(--gold);margin-bottom:.25rem}
+.rod-origin{font-size:.82rem;color:rgba(249,245,239,0.4);margin-bottom:1.25rem}.rod-desc{font-size:.9rem;color:rgba(249,245,239,0.65);line-height:1.7;margin-bottom:1.5rem}
+.rod-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}.rod-stat{background:rgba(255,255,255,0.04);border-radius:8px;padding:.75rem .5rem;text-align:center}
+.rod-stat-val{font-size:.95rem;font-weight:700;color:var(--gold)}.rod-stat-lbl{font-size:.68rem;color:rgba(249,245,239,0.4);margin-top:.15rem}
+.rod-bars{margin-bottom:1.5rem}.rod-bar-row{margin-bottom:.75rem}
+.rod-bar-lbl{display:flex;justify-content:space-between;font-size:.8rem;color:rgba(249,245,239,0.5);margin-bottom:.3rem}
+.rod-bar-bg{background:rgba(255,255,255,0.08);border-radius:4px;height:6px;overflow:hidden}
+.rod-bar-fill{height:100%;background:var(--gold);border-radius:4px;width:0;transition:width .8s ease}
+.rod-funfact{background:rgba(201,169,110,0.08);border-left:3px solid var(--gold);padding:.85rem 1.1rem;border-radius:0 8px 8px 0;font-size:.84rem;color:rgba(249,245,239,0.65);line-height:1.6}.rod-funfact strong{color:var(--gold)}
+.rod-shuffle{background:transparent;border:1.5px solid var(--gold);color:var(--gold);padding:.65rem 1.5rem;border-radius:8px;cursor:pointer;font-family:var(--font-body);font-size:.88rem;transition:all .2s}.rod-shuffle:hover{background:var(--gold);color:var(--dark);transform:translateY(-2px)}
+
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.review-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;transition:all .25s}
+.review-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.review-card blockquote{font-family:var(--font-display);font-style:italic;font-size:1rem;color:var(--text);line-height:1.6;margin-bottom:1rem}
+.review-card blockquote::before{content:'\201C';font-size:3rem;color:var(--gold-light);line-height:0;vertical-align:-1rem;margin-right:.25rem}
+.reviewer{display:flex;align-items:center;gap:.75rem}.reviewer-avatar{width:40px;height:40px;border-radius:50%;background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.reviewer-name{font-weight:700;font-size:.88rem}.reviewer-sub{font-size:.78rem;color:var(--text3)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.compare-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.compare-table th{background:var(--dark);color:var(--gold);padding:.85rem 1rem;text-align:left;font-weight:700;font-size:.78rem;letter-spacing:.06em;white-space:nowrap}
+.compare-table td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;transition:background .2s}
+.compare-table tr:last-child td{border-bottom:none}.compare-table tr:nth-child(even) td{background:var(--cream2)}
+.compare-table tr:hover td{background:rgba(201,169,110,0.06)}
+.compare-table .breed-name-col{font-weight:700;color:var(--text)}.star-rating{color:var(--gold);font-size:.75rem}
+
+/* ── FAQ ── */
+.faq-list{max-width:800px;margin:0 auto}.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;cursor:pointer;font-weight:700;font-size:.95rem;gap:1rem}
+.faq-q .faq-icon{font-size:1.2rem;color:var(--gold);transition:transform .3s;flex-shrink:0}.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-a{display:none;padding-bottom:1.25rem;font-size:.9rem;color:var(--text2);line-height:1.75}.faq-item.open .faq-a{display:block;animation:fadeUp .25s ease}
+.cta-banner{background:var(--dark2);border-radius:var(--radius);padding:3rem 2rem;text-align:center}
+.cta-banner h2{color:#f9f5ef;margin-bottom:1rem}.cta-banner p{color:rgba(249,245,239,0.65);margin-bottom:2rem}.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+.footer{background:var(--dark);color:rgba(249,245,239,0.5);padding:3rem 0 1.5rem}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand h3{font-family:var(--font-display);color:#f9f5ef;margin-bottom:.75rem}.footer-brand p{font-size:.85rem;line-height:1.6}
+.footer-col h4{color:var(--gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}.footer-col ul{list-style:none}.footer-col li{margin-bottom:.5rem}
+.footer-col a{font-size:.85rem;color:rgba(249,245,239,0.5);transition:color .2s}.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;text-align:center;font-size:.82rem}
+
+/* ── SETTINGS ── */
+.nav-settings-btn{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text);margin-left:.5rem;padding:0.5rem;transition:transform .3s}
+.nav-settings-btn:hover{transform:rotate(60deg)}
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:98;opacity:0;visibility:hidden;transition:0.3s}.settings-overlay.open{opacity:1;visibility:visible}
+.settings-panel{position:fixed;top:0;right:-380px;width:340px;height:100vh;background:var(--cream);z-index:99;box-shadow:-4px 0 24px rgba(0,0,0,0.15);transition:right 0.3s ease;display:flex;flex-direction:column;padding:1.5rem;overflow-y:auto}.settings-panel.open{right:0}
+.settings-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem}.settings-header h3{margin:0;font-family:var(--font-display)}
+.settings-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text3);transition:transform .2s}
+.settings-close:hover{transform:rotate(90deg)}
+.settings-content{flex:1;display:flex;flex-direction:column;gap:1.5rem}
+.setting-group label{font-size:0.85rem;font-weight:700;color:var(--text2);display:block;margin-bottom:0.5rem}.setting-options{display:flex;gap:0.5rem;flex-wrap:wrap}
+.theme-btn,.size-btn{padding:0.4rem 0.7rem;border:1.5px solid var(--border);border-radius:6px;background:var(--cream2);cursor:pointer;transition:0.2s;font-family:var(--font-body)}
+.theme-btn.active,.size-btn.active{border-color:var(--gold);background:rgba(201,169,110,0.15)}
+.settings-reset{margin-top:1rem;padding:0.7rem;border:1px dashed var(--border);border-radius:8px;background:transparent;color:var(--text3);cursor:pointer;font-size:0.85rem}.settings-reset:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── DARK MODE ── */
+body[data-theme="dark"]{--cream:#151210;--cream2:#221d16;--cream3:#2d251d;--text:#f0ebe4;--text2:#b8a892;--text3:#8a7a65;--border:#3d3226;--dark:#0a0806}
+body[data-theme="dark"] .nav{background:rgba(21,18,16,0.95)}
+body[data-theme="dark"] .bmc{background:var(--cream2)}
+body[data-theme="dark"] .modal-header{background:var(--cream)}
+body[data-text-size="small"]{font-size:14px}body[data-text-size="large"]{font-size:18px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+.hero-inner{grid-template-columns:1fr}.hero-img-wrap{display:none}
+.ai-inner{grid-template-columns:1fr}
+.breeds-mega-grid,.fav-grid{grid-template-columns:repeat(3,1fr)}
+.why-grid,.polska-grid,.profiles-grid,.reviews-grid{grid-template-columns:1fr 1fr}
+.rod-inner{grid-template-columns:1fr}.footer-inner{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}
+.expensive-grid{grid-template-columns:repeat(3,1fr)}
+.stats-strip-inner{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+.container{padding:0 1rem}.section{padding:3.5rem 0}.nav-links{display:none}.nav-toggle{display:block}
+.breeds-mega-grid,.fav-grid{grid-template-columns:repeat(2,1fr)}
+.why-grid,.polska-grid,.profiles-grid,.reviews-grid{grid-template-columns:1fr}
+.calc-grid{grid-template-columns:1fr}.footer-inner{grid-template-columns:1fr}
+.expensive-grid{grid-template-columns:repeat(2,1fr)}
+.lightbox-nav.prev{left:-1rem}.lightbox-nav.next{right:-1rem}
+.compare-bar{padding:.75rem 1rem}
+}
+@media print{
+.nav,.scroll-progress,.back-top,.compare-bar,.lightbox,.modal-overlay,.settings-overlay,.settings-panel,.toast-container{display:none!important}
+.section{page-break-inside:avoid}body{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">🐾 Rasy<span>Kotów</span>.pl</div>
+  <ul class="nav-links">
+    <li><a href="#dlaczego">Dlaczego rasy?</a></li>
+    <li><a href="#ai-asystent">AI Asystent</a></li>
+    <li><a href="#wszystkie-rasy">70 Ras</a></li>
+    <li><a href="#tools">Narzędzia</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#ulubione" class="nav-fav-link" id="navFavLink"><span>❤️</span> Ulubione <span class="nav-fav-count" id="navFavCount">0</span></a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:.25rem">
+    <button class="nav-toggle" onclick="toggleMobileMenu()">☰</button>
+    <button class="nav-settings-btn" onclick="toggleSettings()" title="Ustawienia">⚙️</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#dlaczego" onclick="closeMobileMenu()">Dlaczego rasy?</a>
+  <a href="#ai-asystent" onclick="closeMobileMenu()">AI Asystent</a>
+  <a href="#wszystkie-rasy" onclick="closeMobileMenu()">70 Ras</a>
+  <a href="#najdrozsze" onclick="closeMobileMenu()">Najdroższe rasy</a>
+  <a href="#tools" onclick="closeMobileMenu()">Narzędzia</a>
+  <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+  <a href="#ulubione" onclick="closeMobileMenu()" style="color:#e74c3c">❤️ Ulubione</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-tag">Przewodnik felinologiczny</div>
+        <h1 id="heroTitle" aria-label="Odkryj Świat Rasowych Kotów">
+          <span class="typewriter-wrap"></span>
+          <em class="typewriter-wrap"></em>
+        </h1>
+        <p class="hero-desc">Przewodnik po 70 rasach kotów — unikalne cechy, temperamenty i pochodzenie. Teraz z asystentem AI, który pomoże Ci wybrać idealnego kota.</p>
+        <div class="hero-btns">
+          <a href="#ai-asystent" class="btn btn-primary">🤖 Porozmawiaj z AI</a>
+          <a href="#wszystkie-rasy" class="btn btn-outline">📖 Przeglądaj 70 ras</a>
+        </div>
+        <div class="hero-stats">
+          <div><span class="hero-stat-num">70</span><span class="hero-stat-lbl">ras w bazie</span></div>
+          <div><span class="hero-stat-num">700+</span><span class="hero-stat-lbl">zdjęć w galerii</span></div>
+          <div><span class="hero-stat-num">AI</span><span class="hero-stat-lbl">asystent doradca</span></div>
+        </div>
+      </div>
+      <div class="hero-img-wrap hero-parallax" id="heroParallax">
+        <img src="https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=800&q=80" alt="Rasowy kot">
+        <div class="hero-img-badge"><span>Rasy kotów</span><strong>Przewodnik</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-strip-inner">
+      <div class="stat-item reveal"><span class="stat-num counter" data-target="70">0</span><span class="stat-lbl">oficjalnie uznanych ras</span></div>
+      <div class="stat-item reveal reveal-delay-1"><span class="stat-num">3%</span><span class="stat-lbl">kotów domowych to rasy rasowe</span></div>
+      <div class="stat-item reveal reveal-delay-2"><span class="stat-num counter" data-target="4">0</span><span class="stat-lbl">główne kategorie EMS</span></div>
+      <div class="stat-item reveal reveal-delay-3"><span class="stat-num counter" data-target="100" data-suffix="+">0</span><span class="stat-lbl">lat tradycji hodowlanej</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DLACZEGO -->
+<section class="section" id="dlaczego">
+  <div class="container">
+    <div class="section-label reveal">Fascynujący świat</div>
+    <h2 class="section-title reveal">Dlaczego Rasy Kotów Są Tak Fascynujące?</h2>
+    <div class="divider reveal"></div>
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1"><div class="why-icon">🧬</div><h3>Jeden przodek, setki ras</h3><p>Wszystkie koty domowe wywodzą się od kota nubijskiego, lecz dziś zachwyca nas blisko <strong>70 oficjalnie uznanych ras</strong> o odmiennym wyglądzie i charakterze.</p></div>
+      <div class="why-card reveal reveal-delay-2"><div class="why-icon">🏆</div><h3>Dzieło hodowców</h3><p>Każda rasa to efekt wieloletniej, ukierunkowanej pracy hodowców, którzy kształtowali unikalny wygląd, temperament i potrzeby konkretnych linii.</p></div>
+      <div class="why-card reveal reveal-delay-3"><div class="why-icon">🌍</div><h3>Światowe standardy</h3><p>Organizacje felinologiczne jak <strong>FIFe</strong> czy <strong>WCF</strong> ustanawiają szczegółowe standardy ras, tworząc katalogi stosowane na wystawach na całym świecie.</p></div>
+      <div class="why-card reveal reveal-delay-4"><div class="why-icon">💎</div><h3>Rzadki przywilej</h3><p>Tylko około <strong>3% kotów</strong> to koty rasowe, a jeszcze mniejszy odsetek spełnia wymogi wystawowe — to prawdziwe arystokratyczne grono.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="ai-section" id="ai-asystent">
+  <div class="container">
+    <div class="ai-inner">
+      <div class="ai-info reveal-left">
+        <div class="section-label" style="color:var(--gold)">Nowość</div>
+        <h2>AI Asystent <br>Doboru Rasy</h2>
+        <div class="divider"></div>
+        <p>Opisz swój styl życia, mieszkanie i oczekiwania — nasz AI przeanalizuje Twoje potrzeby i zaproponuje idealne rasy kotów dopasowane specjalnie do Ciebie.</p>
+        <p>Asystent oparty na Claude (Anthropic) zna wszystkie 70 ras w naszej bazie i potrafi odpowiedzieć na szczegółowe pytania o każdą z nich.</p>
+        <ul class="ai-features">
+          <li>Personalizowane rekomendacje ras</li>
+          <li>Odpowiedzi na pytania o charakter, pielęgnację i zdrowie</li>
+          <li>Porównanie wybranych ras</li>
+          <li>Porady dla nowych właścicieli kotów</li>
+          <li>Informacje o hodowlach i kosztach</li>
+        </ul>
+      </div>
+      <div class="ai-chat-box reveal-right">
+        <div class="ai-chat-header">
+          <div class="ai-avatar">🐾</div>
+          <div style="flex:1">
+            <div class="ai-name">KociAI Asystent</div>
+            <div class="ai-status"><span class="ai-dot"></span> Online — gotowy do pomocy</div>
+          </div>
+          <button class="ai-history-btn" onclick="clearAiHistory()" title="Wyczyść historię">🗑 Wyczyść</button>
+        </div>
+        <div class="ai-messages" id="aiMessages">
+          <div class="msg msg-ai">Cześć! Jestem Twoim przewodnikiem po świecie rasowych kotów 🐱<br><br>Powiedz mi o sobie — gdzie mieszkasz, ile czasu spędzasz w domu, czy masz dzieci lub inne zwierzęta? Pomogę Ci znaleźć idealną rasę!</div>
+        </div>
+        <div class="ai-quick-btns">
+          <button class="ai-quick-btn" onclick="sendQuick('Mieszkam w małym mieszkaniu i dużo pracuję')">🏠 Małe mieszkanie</button>
+          <button class="ai-quick-btn" onclick="sendQuick('Mam dzieci i szukam spokojnego kota')">👨‍👩‍ Rodzina z dziećmi</button>
+          <button class="ai-quick-btn" onclick="sendQuick('Jestem alergiczny na sierść kota')">🤧 Alergia</button>
+          <button class="ai-quick-btn" onclick="sendQuick('Chcę aktywnego i inteligentnego kota')">⚡ Aktywny</button>
+          <button class="ai-quick-btn" onclick="sendQuick('Jakie są najrzadsze rasy kotów?')">💎 Rzadkie rasy</button>
+        </div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="aiInput" placeholder="Napisz do asystenta..." onkeydown="if(event.key==='Enter')sendAI()">
+          <button class="ai-send" id="aiSendBtn" onclick="sendAI()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BREEDS -->
+<section class="section breeds-full-section" id="wszystkie-rasy">
+  <div class="container">
+    <div class="section-label reveal">Kompletna encyklopedia</div>
+    <h2 class="section-title reveal">Wszystkie 70 Ras Kotów</h2>
+    <div class="divider reveal"></div>
+    <p class="section-subtitle reveal">Kliknij zdjęcie aby powiększyć. Kliknij kartę aby zobaczyć statystyki. ♡ = ulubione. ☐ = porównaj (max 3).</p>
+    <div class="breeds-search-bar">
+      <span class="si">🔍</span>
+      <input type="text" id="breedsSearchInput" placeholder="Szukaj rasy po nazwie, pochodzeniu lub cesze..." oninput="filterBreedsMega()">
+    </div>
+    <div class="breeds-filter-bar" id="breedsFilterBar"></div>
+    <div class="budget-filter">
+      <label>💰 Maks. koszt miesięczny:</label>
+      <input type="range" id="budgetSlider" min="400" max="950" step="50" value="950" oninput="onBudgetChange()">
+      <span class="budget-val" id="budgetVal">Bez limitu</span>
+      <button class="budget-reset" onclick="resetBudget()">Resetuj</button>
+    </div>
+    <div class="recently-viewed" id="recentlyViewedBox">
+      <div class="rv-label">🕑 Ostatnio przeglądane:</div>
+      <div class="rv-chips" id="recentlyViewedChips"></div>
+    </div>
+    <div class="breeds-count" id="breedsCount"></div>
+    <div class="breeds-mega-grid" id="breedsMegaGrid"></div>
+  </div>
+</section>
+
+<!-- FAVORITES -->
+<section class="fav-section hidden" id="ulubione">
+  <div class="container">
+    <div class="section-label">Twój wybór</div>
+    <h2 class="section-title">❤️ Ulubione Rasy</h2>
+    <div class="divider"></div>
+    <p class="section-subtitle">Rasy, które oznaczyłeś jako ulubione. Kliknij serduszko ponownie, aby usunąć.</p>
+    <div id="favContent"></div>
+  </div>
+</section>
+
+<!-- POLSKA -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-label reveal">Polska felinologia</div>
+    <h2 class="section-title reveal">Rasy Kotów w Polsce</h2>
+    <div class="divider reveal"></div>
+    <div class="polska-grid">
+      <div class="polska-left reveal-left">
+        <div class="breed-rank"><div class="rank-num">01</div><div class="rank-info"><h4>Maine Coon i Ragdoll</h4><p>Rosnąca popularność dużych, łagodnych ras rodzinnych.</p></div></div>
+        <div class="breed-rank"><div class="rank-num">02</div><div class="rank-info"><h4>Brytyjski Krótkowłosy</h4><p>Klasyk wśród polskich miłośników kotów — elegancki i spokojny.</p></div></div>
+        <div class="breed-rank"><div class="rank-num">03</div><div class="rank-info"><h4>Bengalski</h4><p>Coraz więcej osób szuka egzotycznego wyglądu w domowym zaciszu.</p></div></div>
+        <div class="breed-rank"><div class="rank-num">04</div><div class="rank-info"><h4>Syberyjski</h4><p>Ceniony jako hipoalergiczny z naturalną, gęstą sierścią.</p></div></div>
+        <div class="breed-rank"><div class="rank-num">05</div><div class="rank-info"><h4>Norweski Leśny</h4><p>Majestatyczny, niezależny i świetnie znoszący polskie zimy.</p></div></div>
+      </div>
+      <div class="polska-right reveal-right">
+        <h3>Czym kierować się przy wyborze?</h3>
+        <ul>
+          <li>Styl życia i czas na pielęgnację</li><li>Wielkość mieszkania</li><li>Obecność dzieci lub innych zwierząt</li>
+          <li>Budżet (zakup + opieka weterynaryjna)</li><li>Oczekiwany temperament</li><li>Preferowana długość sierści</li>
+          <li>Aktywność — spokojny czy energiczny?</li>
+        </ul>
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);font-size:.85rem;color:rgba(249,245,239,0.5);line-height:1.6">✦ Renomowana hodowla to podstawa — dba o zdrowie, socjalizację i dokumenty kocięcia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAJDROŻSZE -->
+<section class="expensive-section" id="najdrozsze">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--gold)">Ranking</div>
+    <h2 class="section-title reveal" style="color:#f9f5ef">Najdroższe Rasy Kotów</h2>
+    <div class="divider reveal"></div>
+    <p class="reveal" style="color:rgba(249,245,239,0.6);margin-bottom:0">Ceny kociąt z renomowanych hodowli w Polsce i Europie.</p>
+    <div class="expensive-grid" id="expensiveGrid"></div>
+  </div>
+</section>
+
+<!-- PRZEWODNIK -->
+<section class="section" id="przewodnik">
+  <div class="container">
+    <div class="section-label reveal">Poradnik</div>
+    <h2 class="section-title reveal">Jak Wybrać Idealnego Kota Rasowego?</h2>
+    <div class="divider reveal"></div>
+    <p class="section-subtitle reveal">Znalezienie wymarzonego kota to decyzja na lata. Oto kilka kluczowych kroków.</p>
+    <div class="guide-steps">
+      <div class="guide-step reveal"><div class="guide-step-num">01</div><div class="guide-step-body"><h3>Ile czasu możesz poświęcić na pielęgnację?</h3><p>Niektóre rasy wymagają regularnego czesania i większej uwagi.</p><ul><li>Mało czasu: koty o łatwej pielęgnacji (brytyj., rosyjski niebieski)</li><li>Dużo czasu: koty długowłose — perski, maine coon, ragdoll</li></ul></div></div>
+      <div class="guide-step reveal"><div class="guide-step-num">02</div><div class="guide-step-body"><h3>Jaki jest Twój styl życia?</h3><p>Aktywny tryb życia sprzyja kotom energicznym, spokojny dom — kotom zrównoważonym.</p><ul><li>Aktywny: bengalski, abisyński, maine coon</li><li>Spokojny: brytyj. krótkowłosy, ragdoll, rosyjski niebieski</li></ul></div></div>
+      <div class="guide-step reveal"><div class="guide-step-num">03</div><div class="guide-step-body"><h3>Ile miejsca masz w domu?</h3><p>Nawet w kawalerce można mieć szczęśliwego kota, jeśli zapewnisz drapaki, półki i stymulację.</p></div></div>
+      <div class="guide-step reveal"><div class="guide-step-num">04</div><div class="guide-step-body"><h3>Czy masz dzieci lub inne zwierzęta?</h3><ul><li>Dzieci: ragdoll, maine coon, ragamuffin</li><li>Inne psy/koty: brytyj. krótkowłosy, syberyjski</li></ul></div></div>
+      <div class="guide-step reveal"><div class="guide-step-num">05</div><div class="guide-step-body"><h3>Niezależny czy przywiązany?</h3><ul><li>Niezależny: kartuski, norweski leśny, brytyj. krótkowłosy</li><li>Przywiązany: ragdoll, burmski, syjamski</li></ul></div></div>
+    </div>
+    <div class="profiles-grid">
+      <div class="profile-card reveal reveal-delay-1"><h4>🏠 Spokojny dom, mało czasu</h4><ul><li>Brytyjski krótkowłosy</li><li>Rosyjski niebieski</li><li>Kartuski</li></ul></div>
+      <div class="profile-card reveal reveal-delay-2"><h4>⚡ Aktywny opiekun</h4><ul><li>Bengalski</li><li>Abisyński</li><li>Maine Coon</li></ul></div>
+      <div class="profile-card reveal reveal-delay-3"><h4>👨‍👩‍👧 Rodzina z dziećmi</h4><ul><li>Ragdoll</li><li>Maine Coon</li><li>Ragamuffin</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="section" id="tools">
+  <div class="container">
+    <div class="section-label">Narzędzia</div>
+    <h2 class="section-title">Znajdź Swojego Idealnego Kota</h2>
+    <div class="divider" style="background:var(--gold)"></div>
+    <p class="section-subtitle">Quiz, wyszukiwarka, kalkulator kosztów (z amortyzacją zakupu), hodowle i losowa rasa.</p>
+    <div class="tools-tabs">
+      <button class="tool-tab active" onclick="showTool('quiz',this)">🎯 Quiz</button>
+      <button class="tool-tab" onclick="showTool('search',this)">🔍 Wyszukiwarka</button>
+      <button class="tool-tab" onclick="showTool('calc',this)">💰 Kalkulator</button>
+      <button class="tool-tab" onclick="showTool('hodowle',this)">🏡 Hodowle</button>
+      <button class="tool-tab" onclick="showTool('rod',this)">🎲 Rasa dnia</button>
+    </div>
+    <div id="tool-quiz" class="tool-panel active"><div class="tool-box"><div class="q-prog" id="qprog"></div><div id="quiz-body"></div><div id="quiz-result" style="display:none"></div></div></div>
+    <div id="tool-search" class="tool-panel"><div class="tool-box"><div class="search-input-wrap"><span class="search-icon">🔍</span><input type="text" id="s-input" placeholder="Szukaj rasy..." oninput="filterS()"></div><div class="s-filters" id="s-filters"></div><div class="s-breed-grid" id="s-grid"></div></div></div>
+    <div id="tool-calc" class="tool-panel">
+      <div class="tool-box">
+        <div class="calc-mode">
+          <button class="calc-mode-btn active" onclick="setCalcMode('month',this)">Miesięcznie</button>
+          <button class="calc-mode-btn" onclick="setCalcMode('year',this)">Rocznie</button>
+          <button class="calc-mode-btn" onclick="setCalcMode('life',this)">Przez całe życie</button>
+        </div>
+        <div class="calc-grid">
+          <div class="calc-field"><label>Rasa</label>
+            <select id="c-breed" onchange="calcCost()">
+              <option value="medium">Średnia rasa (~3000 zł)</option>
+              <option value="large">Duża rasa (~5000 zł)</option>
+              <option value="longhair">Długowłosa (~4500 zł)</option>
+              <option value="hairless">Bezwłosa (~6000 zł)</option>
+              <option value="exotic">Egzotyczna (~10000 zł)</option>
+            </select>
+          </div>
+          <div class="calc-field"><label>Karma</label>
+            <select id="c-food" onchange="calcCost()">
+              <option value="budget">Ekonomiczna</option>
+              <option value="mid" selected>Średnia jakość</option>
+              <option value="premium">Premium / surowa</option>
+            </select>
+          </div>
+          <div class="calc-field"><label>Opieka weterynaryjna</label>
+            <select id="c-vet" onchange="calcCost()">
+              <option value="basic">Podstawowa</option>
+              <option value="regular" selected>Regularna</option>
+              <option value="full">Pełna + ubezpieczenie</option>
+            </select>
+          </div>
+          <div class="calc-field"><label>Pielęgnacja / groomer</label>
+            <select id="c-groom" onchange="calcCost()">
+              <option value="none">Samodzielna</option>
+              <option value="occ">Okazjonalny groomer</option>
+              <option value="reg">Regularny groomer</option>
+            </select>
+          </div>
+          <div class="calc-field"><label>Lata życia kota (amortyzacja)</label>
+            <input type="number" id="c-years" value="15" min="5" max="25" onchange="calcCost()">
+          </div>
+        </div>
+        <div class="cost-rows" id="cost-rows"></div>
+        <p class="calc-note">* Szacunkowe wartości. Kalkulator uwzględnia amortyzację ceny zakupu kota rozłożoną na lata życia.</p>
+      </div>
+    </div>
+    <div id="tool-hodowle" class="tool-panel"><div class="tool-box"><div class="hod-note">⚠️ Przed zakupem zawsze odwiedzaj hodowlę osobiście i pytaj o dokumenty zdrowotne rodziców.</div><div class="hod-filter-row" id="hod-filters"></div><div class="hod-list" id="hod-list"></div></div></div>
+    <div id="tool-rod" class="tool-panel"><div class="tool-box"><div class="rod-inner" id="rod-inner"></div><div style="text-align:center;margin-top:1.5rem"><button class="rod-shuffle" onclick="showRod()">🎲 Losuj inną rasę</button></div></div></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section section--alt" id="opinie">
+  <div class="container">
+    <div class="section-label reveal">Właściciele mówią</div>
+    <h2 class="section-title reveal">Opinie Właścicieli Rasowych Kotów</h2>
+    <div class="divider reveal"></div>
+    <div class="reviews-grid">
+      <div class="review-card reveal reveal-delay-1"><blockquote>Nasz Barnaba to prawdziwy olbrzym o gołębim sercu! Wspaniale dogaduje się z dziećmi, cierpliwie znosi ich zabawy.</blockquote><div class="reviewer"><div class="reviewer-avatar">🦁</div><div><div class="reviewer-name">Joanna, Warszawa</div><div class="reviewer-sub">Właścicielka Maine Coona</div></div></div></div>
+      <div class="review-card reveal reveal-delay-2"><blockquote>Mój Fiodor to kwintesencja elegancji i spokoju. Zawsze wita mnie po powrocie do domu. Idealny towarzysz.</blockquote><div class="reviewer"><div class="reviewer-avatar">💙</div><div><div class="reviewer-name">Piotr, Kraków</div><div class="reviewer-sub">Właściciel Rosyjskiego Niebieskiego</div></div></div></div>
+      <div class="review-card reveal reveal-delay-3"><blockquote>Luna to wulkan energii i inteligencji! Od kiedy jest ze mną, dni są pełne śmiechu. Gorąco polecam!</blockquote><div class="reviewer"><div class="reviewer-avatar">🐆</div><div><div class="reviewer-name">Anna, Wrocław</div><div class="reviewer-sub">Właścicielka Bengala</div></div></div></div>
+      <div class="review-card reveal reveal-delay-1"><blockquote>Nasz pluszowy Filemon idealnie wpasował się w nasz spokojny tryb życia. Dodaje domowi mnóstwo ciepła.</blockquote><div class="reviewer"><div class="reviewer-avatar">🫐</div><div><div class="reviewer-name">Ewa i Jan, Poznań</div><div class="reviewer-sub">Właściciele Brytyjczyka</div></div></div></div>
+      <div class="review-card reveal reveal-delay-2"><blockquote>Moja Lilith to niezastąpiona towarzyszka pracy zdalnej! Jest niezwykle komunikatywna i inteligentna.</blockquote><div class="reviewer"><div class="reviewer-avatar">👁️</div><div><div class="reviewer-name">Marta, Gdańsk</div><div class="reviewer-sub">Właścicielka Syjama</div></div></div></div>
+      <div class="review-card reveal reveal-delay-3"><blockquote>Syberyjski to ideał — hipoalergiczny, piękny i wyjątkowo inteligentny. Nasz Borys sam otwiera drzwi!</blockquote><div class="reviewer"><div class="reviewer-avatar">🌲</div><div><div class="reviewer-name">Tomasz, Łódź</div><div class="reviewer-sub">Właściciel Syberyjskiego</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TABELA -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">Porównanie</div>
+    <h2 class="section-title reveal">Tabela Porównawcza Ras</h2>
+    <div class="divider reveal"></div>
+    <div class="table-wrap reveal">
+      <table class="compare-table">
+        <thead><tr><th>Rasa</th><th>Wielkość</th><th>Sierść</th><th>Aktywność</th><th>Towarzyskość</th><th>Pielęgnacja</th><th>Cena kociaka</th><th>Dla kogo</th></tr></thead>
+        <tbody>
+          <tr><td class="breed-name-col">🦁 Maine Coon</td><td>Duży</td><td>Długa</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★☆☆</td><td>3500–7000 zł</td><td>Rodziny, aktywni</td></tr>
+          <tr><td class="breed-name-col">☁️ Ragdoll</td><td>Duży</td><td>Długa</td><td class="star-rating">★★☆☆☆</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★★☆</td><td>3000–6000 zł</td><td>Rodziny, single</td></tr>
+          <tr><td class="breed-name-col">🐆 Bengalski</td><td>Średni</td><td>Krótka</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★★☆</td><td class="star-rating">★☆☆☆☆</td><td>4000–8000 zł</td><td>Aktywni, doświadczeni</td></tr>
+          <tr><td class="breed-name-col">🫐 Brytyj. krótkowłosy</td><td>Średni</td><td>Krótka</td><td class="star-rating">★★☆☆☆</td><td class="star-rating">★★★☆☆</td><td class="star-rating">★☆☆☆☆</td><td>2500–5000 zł</td><td>Spokojny dom, singiel</td></tr>
+          <tr><td class="breed-name-col">🌲 Syberyjski</td><td>Duży</td><td>Długa</td><td class="star-rating">★★★★☆</td><td class="star-rating">★★★★☆</td><td class="star-rating">★★★☆☆</td><td>3000–6000 zł</td><td>Alergycy, rodziny</td></tr>
+          <tr><td class="breed-name-col">👁️ Syjamski</td><td>Średni</td><td>Krótka</td><td class="star-rating">★★★★☆</td><td class="star-rating">★★★★★</td><td class="star-rating">★☆☆☆☆</td><td>2000–4500 zł</td><td>Single, praca zdalna</td></tr>
+          <tr><td class="breed-name-col">🌑 Sphynx</td><td>Średni</td><td>Brak</td><td class="star-rating">★★★★☆</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★★☆</td><td>4000–8000 zł</td><td>Alergycy, towarzyskie osoby</td></tr>
+          <tr><td class="breed-name-col">💙 Rosyjski niebieski</td><td>Średni</td><td>Krótka</td><td class="star-rating">★★★☆☆</td><td class="star-rating">★★★☆☆</td><td class="star-rating">★☆☆☆☆</td><td>2500–5000 zł</td><td>Spokojny dom</td></tr>
+          <tr><td class="breed-name-col">👑 Perski</td><td>Średni</td><td>Długa</td><td class="star-rating">★☆☆☆☆</td><td class="star-rating">★★★☆☆</td><td class="star-rating">★★★★★</td><td>2500–6000 zł</td><td>Doświadczeni opiekunowie</td></tr>
+          <tr><td class="breed-name-col">🏺 Abisyński</td><td>Mały</td><td>Krótka</td><td class="star-rating">★★★★★</td><td class="star-rating">★★★★☆</td><td class="star-rating">★☆☆☆☆</td><td>2000–4500 zł</td><td>Aktywni, duże domy</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section--alt" id="faq">
+  <div class="container">
+    <div class="section-label reveal">Pytania i odpowiedzi</div>
+    <h2 class="section-title reveal">Najczęściej Zadawane Pytania</h2>
+    <div class="divider reveal"></div>
+    <div class="faq-list">
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Ile kosztuje kot rasowy?</span><span class="faq-icon">+</span></div><div class="faq-a">Cena kota rasowego może znacznie wahać się w zależności od rasy, renomy hodowli i regionu. Zazwyczaj ceny zaczynają się od około 2000 zł i mogą sięgać nawet 25000 zł dla egzotycznych ras z domieszką dzikiego kota.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Gdzie bezpiecznie kupić kota rasowego?</span><span class="faq-icon">+</span></div><div class="faq-a">Najbezpieczniejszym miejscem jest renomowana hodowla zarejestrowana w federacji felinologicznej (FIFe, TICA, WCF). Unikaj kupowania kotów z giełd, anonimowych ogłoszeń czy sklepów zoologicznych.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Czy koty rasowe są zdrowsze od dachowców?</span><span class="faq-icon">+</span></div><div class="faq-a">Niekoniecznie. Koty rasowe mogą być obciążone predyspozycjami do konkretnych chorób genetycznych. Odpowiedzialne hodowle minimalizują to ryzyko przez badania genetyczne rodziców.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Jak długo żyją koty rasowe?</span><span class="faq-icon">+</span></div><div class="faq-a">Większość kotów rasowych żyje od 12 do 18 lat. Niektóre rasy, takie jak Maine Coon czy Brytyjski Krótkowłosy, mogą dożywać nawet 20 lat.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Jak przygotować dom na przyjęcie kota rasowego?</span><span class="faq-icon">+</span></div><div class="faq-a">Zadbaj o: kuwetę (1 kuweta na kota + 1 dodatkowa), miseczki na wodę i karmę, drapaki pionowe i poziome, legowisko oraz zabawki. Ważne jest zabezpieczenie okien i balkonów siatkami.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)"><span>Jak używać funkcji porównania ras?</span><span class="faq-icon">+</span></div><div class="faq-a">W sekcji "70 Ras" przy każdej karcie pojawi się checkbox "Porównaj". Zaznacz 2–3 rasy, a na dole ekranu pojawi się pasek z przyciskiem "Porównaj". Kliknij go, aby zobaczyć zestawienie side-by-side wybranych ras.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <h2>Twoja Przygoda z Rasowym Kotem Czeka!</h2>
+      <p>Odkryj bogactwo 70 ras kotów i porozmawiaj z AI asystentem, który pomoże Ci wybrać idealnego towarzysza.</p>
+      <div class="cta-btns">
+        <a href="#ai-asystent" class="btn btn-primary">🤖 Zapytaj AI Asystenta</a>
+        <a href="#wszystkie-rasy" class="btn btn-outline" style="color:var(--text);border-color:var(--border)">📖 Przeglądaj 70 ras</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand"><h3>🐾 RasyKotów.pl</h3><p>Kompletny przewodnik po świecie rasowych kotów — 70 ras, AI asystent i praktyczne porady. Tworzone z miłości do kotów.</p></div>
+      <div class="footer-col"><h4>Rasy</h4><ul><li><a href="#wszystkie-rasy">Wszystkie 70 ras</a></li><li><a href="#najdrozsze">Najdroższe rasy</a></li><li><a href="#ulubione">❤️ Ulubione</a></li></ul></div>
+      <div class="footer-col"><h4>Informacje</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="#tools">Kalkulator kosztów</a></li><li><a href="#tools">Hodowle</a></li><li><a href="#ai-asystent">AI Asystent</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 RasyKotów.pl · Strona informacyjna · Nie powiązana z żadną federacją felinologiczną</p></div>
+  </div>
+</footer>
+
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compareBar">
+  <div>
+    <div class="compare-bar-lbl">Porównaj rasy (max 3):</div>
+    <div class="compare-bar-slots" id="compareSlots"></div>
+  </div>
+  <div class="compare-bar-actions">
+    <button class="btn-compare-go" onclick="openCompareModal()">📊 Porównaj</button>
+    <button class="btn-compare-clear" onclick="clearCompare()">✕ Wyczyść</button>
+  </div>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compareModal" onclick="if(event.target===this)closeCompareModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📊 Porównanie Ras</h3>
+      <button class="modal-close" onclick="closeCompareModal()">✕</button>
+    </div>
+    <div class="modal-body" id="compareModalBody"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-nav prev" onclick="lightboxNav(-1)">‹</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav next" onclick="lightboxNav(1)">›</button>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings(event)"></div>
+<aside class="settings-panel" id="settingsPanel">
+  <div class="settings-header"><h3>⚙️ Ustawienia</h3><button class="settings-close" onclick="toggleSettings()">✕</button></div>
+  <div class="settings-content">
+    <div class="setting-group"><label>🌙 Motyw</label><div class="setting-options"><button class="theme-btn active" data-value="light" onclick="setTheme('light')">☀️ Jasny</button><button class="theme-btn" data-value="dark" onclick="setTheme('dark')">🌙 Ciemny</button></div></div>
+    <div class="setting-group"><label>🔤 Rozmiar tekstu</label><div class="setting-options"><button class="size-btn" data-value="small" onclick="setTextSize('small')">A małe</button><button class="size-btn active" data-value="medium" onclick="setTextSize('medium')">A średnie</button><button class="size-btn" data-value="large" onclick="setTextSize('large')">A duże</button></div></div>
+  </div>
+  <button class="settings-reset" onclick="resetSettings()">🔄 Resetuj ustawienia</button>
+</aside>
+
+<script>
+// ════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════
+const BREEDS=[{name:"Maine Coon",emoji:"🦁",origin:"USA",size:"Duży",hair:"Długa",activity:5,social:5,grooming:3,independ:2,desc:"Łagodny gigant o dzikim wyglądzie i przyjaznym sercu. Jedna z największych ras kotów.",tags:["rodzinny","duży","łagodny"],funfact:"Maine Coony potrafią trylować i lubią wodę.",price:"3500–7000 zł",priceMax:7000,vet:"średnie",monthly:600,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Ragdoll",emoji:"☁️",origin:"USA",size:"Duży",hair:"Długa",activity:2,social:5,grooming:4,independ:1,desc:"Wyjątkowo łagodne koty wiotczejące w ramionach. Idealne dla rodzin z dziećmi.",tags:["łagodny","rodzinny","przytulny"],funfact:"Rozluźniają mięśnie gdy bierze się je na ręce — stąd nazwa.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:550,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop"]},{name:"Perski",emoji:"👑",origin:"Persja/Iran",size:"Średni",hair:"Długa",activity:1,social:3,grooming:5,independ:3,desc:"Majestatyczne koty o charakterystycznym płaskim nosie i luksusowym futrze.",tags:["dostojny","spokojny"],funfact:"Perscy wymagają codziennego czesania — bez tego futro się kołtuni.",price:"2500–6000 zł",priceMax:6000,vet:"wysokie",monthly:650,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1605450648855-63b00b8c6c51?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop"]},{name:"Syberyjski",emoji:"🌲",origin:"Rosja",size:"Duży",hair:"Długa",activity:4,social:4,grooming:3,independ:3,desc:"Naturalna rasa z Syberii. Uznawany za hipoalergiczny dzięki niskiej zawartości Fel d1.",tags:["hipoalergiczny","naturalny","energiczny"],funfact:"Futro odporne na mrozy do -40°C. Jedna z najstarszych ras naturalnych.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:580,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop"]},{name:"Norweski Leśny",emoji:"🌿",origin:"Norwegia",size:"Duży",hair:"Długa",activity:4,social:3,grooming:3,independ:4,desc:"Majestatyczne koty z gęstym futrem chroniącym przed nordyckim klimatem.",tags:["niezależny","naturalny","duży"],funfact:"W mitologii nordyckiej Freya jeździła rydwanem ciągniętym przez norweskie leśne.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:540,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1513245543132-31f507417b26?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Birman",emoji:"🧤",origin:"Birma",size:"Średni",hair:"Półdługa",activity:2,social:4,grooming:3,independ:2,desc:"Eleganckie koty o jedwabistym futrze i charakterystycznych białych rękawiczkach.",tags:["czuły","spokojny","elegancki"],funfact:"Legenda mówi, że koty birmańskie były towarzyszami kapłanów w świątyniach.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:500,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop"]},{name:"Ragamuffin",emoji:"🧸",origin:"USA",size:"Duży",hair:"Długa",activity:2,social:5,grooming:4,independ:1,desc:"Duże, miękkie w dotyku koty o niezwykle łagodnym usposobieniu i gęstym futrze.",tags:["łagodny","rodzinny","miękki"],funfact:"Ragamuffin to odmiana Ragdolla, wyhodowana przez różnych hodowców w latach 90.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:530,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop"]},{name:"Turkish Van",emoji:"🏊",origin:"Turcja",size:"Duży",hair:"Półdługa",activity:4,social:3,grooming:2,independ:3,desc:"Aktywne koty znane z zamiłowania do wody. Charakterystyczne umaszczenie.",tags:["woda","aktywny","niezwykły"],funfact:"Turkish Van to jeden z niewielu kotów, który naprawdę lubi pływać.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"Somali",emoji:"🦊",origin:"USA/Etiopia",size:"Średni",hair:"Półdługa",activity:5,social:4,grooming:2,independ:3,desc:"Długowłosa odmiana Abisyńskiego. Rude, pełne energii koty z puszystym ogonem.",tags:["aktywny","elegancki","energiczny"],funfact:"Somali to długowłosa mutacja Abisyńczyka — gen długiej sierści był ukryty latami.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:500,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1605450648855-63b00b8c6c51?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop"]},{name:"Cymric",emoji:"🔵",origin:"Kanada",size:"Średni",hair:"Długa",activity:3,social:4,grooming:3,independ:3,desc:"Puszysta, bezogonowa odmiana kota manx. Okrągła sylwetka i gęste futro.",tags:["bez ogona","spokojny","rodzinny"],funfact:"Cymric nie mają ogona — wynik naturalnej mutacji genetycznej na Wyspie Man.",price:"2000–4000 zł",priceMax:4000,vet:"średnie",monthly:480,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop"]},{name:"Selkirk Rex",emoji:"🐑",origin:"USA",size:"Duży",hair:"Kręcona",activity:3,social:4,grooming:3,independ:2,desc:"Niezwykle miękkie koty o kręconych, pluszowych lokach. Unikalna faktura futra.",tags:["kręcone futro","miękki","spokojny"],funfact:"Selkirk Rex zostały odkryte w 1987 roku w Montanie.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:520,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1616419958-0bb7e1e83720?w=600&h=400&fit=crop"]},{name:"LaPerm",emoji:"🌈",origin:"USA",size:"Średni",hair:"Kręcona",activity:4,social:4,grooming:2,independ:2,desc:"Koty o miękkich, kręconych lokach. Urodziły się łyse — loki pojawiają się stopniowo.",tags:["kręcone futro","unikalne","przyjazny"],funfact:"LaPerm narodziła się na farmie w Oregonie — kotek bez futra wyrósł w lokalną legendę.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop"]},{name:"Nebelung",emoji:"🌫️",origin:"USA",size:"Średni",hair:"Półdługa",activity:3,social:3,grooming:2,independ:4,desc:"Długowłosa wersja Rosyjskiego Niebieskiego. Delikatny, nieśmiały i lojalny.",tags:["srebrnoszary","delikatny","lojalny"],funfact:"Nebelung to nazwa ze staronordyckiego, oznacza 'Stworzenie z mgły'.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop"]},{name:"Turkish Angora",emoji:"🕊️",origin:"Turcja",size:"Średni",hair:"Półdługa",activity:4,social:4,grooming:2,independ:3,desc:"Elegancka, biała rasa o jedwabistym futrze. Jedna z najstarszych ras na świecie.",tags:["biały","elegancki","starożytny"],funfact:"Turkish Angora przez wieki był ceniony przez sułtanów osmańskich jako dar.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop"]},{name:"Tiffanie",emoji:"💫",origin:"Wielka Brytania",size:"Średni",hair:"Półdługa",activity:3,social:4,grooming:2,independ:2,desc:"Długowłosa wersja Azjatyckiego. Delikatna, elegancka i towarzyska.",tags:["elegancki","delikatny","półdługi"],funfact:"Tiffanie to długowłosa odmiana Burmy — powstała przez przypadek w hodowli.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"Balijczyk",emoji:"🌺",origin:"USA",size:"Średni",hair:"Półdługa",activity:4,social:5,grooming:2,independ:1,desc:"Długowłosa wersja Syjamskiego. Inteligentny, rozmowny i bardzo przywiązany do opiekuna.",tags:["rozmowny","elegancki","przywiązany"],funfact:"Balijczyk to naturalna mutacja długiej sierści u Syjamskiego — odkryta w latach 50.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1557162484-e36b7a75c8f6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop"]},{name:"Amerykański Curl",emoji:"🌙",origin:"USA",size:"Średni",hair:"Krótka/Długa",activity:3,social:4,grooming:2,independ:2,desc:"Koty z niezwykłymi zakręconymi do tyłu uszami. Przyjazne i ciekawskie.",tags:["zakręcone uszy","towarzyski","przyjazny"],funfact:"Kocięta Curla rodzą się z prostymi uszami — zakręcają się w pierwszych tygodniach.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:500,category:"dlugowlose",photos:["https://images.unsplash.com/photo-1530667912788-f976e8ee0bd5?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Brytyjski krótkowłosy",emoji:"🫐",origin:"Wielka Brytania",size:"Średni",hair:"Krótka",activity:2,social:3,grooming:1,independ:4,desc:"Spokojny, dostojny kot o aksamitnym futrze i okrągłej twarzy. Niezależny, ale lojalny.",tags:["spokojny","niezależny","elegancki"],funfact:"Kot Cheshire z Alicji w Krainie Czarów wzorowany był na Brytyjczyku.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:480,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=600&h=400&fit=crop"]},{name:"Syjamski",emoji:"👁️",origin:"Tajlandia",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:1,desc:"Ekspresyjne, rozmowne koty o intensywnie niebieskich oczach. Głośne i bardzo przywiązane.",tags:["rozmowny","przywiązany","inteligentny"],funfact:"Syjamy zmieniają kolor futra zależnie od temperatury ciała.",price:"2000–4500 zł",priceMax:4500,vet:"średnie",monthly:500,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"Rosyjski niebieski",emoji:"💙",origin:"Rosja",size:"Średni",hair:"Krótka",activity:3,social:3,grooming:1,independ:4,desc:"Elegancki, spokojny kot o aksamitnym srebrzystoniebieskim futrze i zielonych oczach.",tags:["elegancki","spokojny","wrażliwy"],funfact:"Rosyjskie Niebieskie są naturalnie hipoalergiczne i skromne w zachowaniu.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:460,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop"]},{name:"Abisyński",emoji:"🏺",origin:"Etiopia",size:"Mały",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Żywiołowe, zwinne koty o pięknym ticked umaszczeniu. Ciekawskie i niezwykle aktywne.",tags:["aktywny","zwinny","ciekawski"],funfact:"Abisyński to jedna z najstarszych ras — przypomina koty starożytnego Egiptu.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:480,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1603991396795-7ff7c49aca3a?w=600&h=400&fit=crop"]},{name:"Bengalski",emoji:"🐆",origin:"USA",size:"Średni",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Charakterystyczne cętki przypominające lamparta. Energiczny, ciekawski i inteligentny.",tags:["egzotyczny","aktywny","energiczny"],funfact:"Bengalski lubią wodę i potrafią otwierać kurki — mały drapieżnik w domu.",price:"4000–8000 zł",priceMax:8000,vet:"niskie",monthly:650,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Egipski Mau",emoji:"🐈",origin:"Egipt",size:"Średni",hair:"Krótka",activity:5,social:3,grooming:1,independ:3,desc:"Najszybszy kot domowy — biegnie do 48 km/h. Naturalne cętki i migdałowate zielone oczy.",tags:["szybki","cętkowany","starożytny"],funfact:"Egipski Mau to jedyna rasa z naturalnym, nie hodowlanym cętkowanym wzorem.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:520,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop"]},{name:"Burmski",emoji:"🟤",origin:"Birma/USA",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:1,desc:"Błyszczące, jedwabiste koty o niesamowitej osobowości. Bardzo towarzyskie i aktywne.",tags:["towarzyski","błyszczący","aktywny"],funfact:"Burmijczycy są tak towarzyskie, że mogą cierpieć na depresję gdy zostają sami.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop"]},{name:"Bombay",emoji:"🌑",origin:"USA",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:1,independ:2,desc:"Czarne jak noc koty o lśniącej sierści i miedzianych oczach. Miniaturowe czarne pantery.",tags:["czarny","czuły","spokojny"],funfact:"Bombay wyhodowano specjalnie, by wyglądał jak miniaturowy czarny pantera.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:470,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop"]},{name:"Kartuski",emoji:"⚫",origin:"Francja",size:"Duży",hair:"Krótka",activity:3,social:3,grooming:2,independ:4,desc:"Spokojne, niebieskawe koty o żółtych lub pomarańczowych oczach. Myśliwi z tradycją.",tags:["spokojny","niezależny","myśliwy"],funfact:"Kartuzy były hodowane przez mnichów kartuzów we Francji od setek lat.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:480,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop"]},{name:"Szkocki Zwisłouchy",emoji:"🔽",origin:"Szkocja",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:2,independ:2,desc:"Urocze koty o charakterystycznych złożonych uszach. Spokojne i przyjazne.",tags:["zwisłe uszy","spokojny","rodzinny"],funfact:"Scottish Fold wyhodowano w latach 60 ze szkockiego kociaka o mutacji uszu.",price:"3000–6000 zł",priceMax:6000,vet:"średnie",monthly:530,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1530667912788-f976e8ee0bd5?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Ocicat",emoji:"🐾",origin:"USA",size:"Duży",hair:"Krótka",activity:5,social:4,grooming:1,independ:2,desc:"Dzikie cętki przy psim charakterze. Aktywny, towarzyski i inteligentny.",tags:["cętkowany","aktywny","towarzyski"],funfact:"Ocicat powstał przypadkowo — krzyżując Abisyńczyka z Syjamem.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:510,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Snowshoe",emoji:"🌨️",origin:"USA",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:2,desc:"Syjamskie zabarwienie z białymi łapkami. Towarzyskie i bardzo gadatliwe.",tags:["białe łapki","towarzyski","rozmowny"],funfact:"Snowshoe to hybryda Syjamskiego i Dwukolorowego Amerykańskiego.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:490,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1557162484-e36b7a75c8f6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop"]},{name:"Singapurski",emoji:"🇸🇬",origin:"Singapur",size:"Mały",hair:"Krótka",activity:4,social:4,grooming:1,independ:2,desc:"Najmniejsza uznana rasa kota. Ciekawski, energiczny i pełen miłości do ludzi.",tags:["mały","energiczny","ciekawski"],funfact:"Singapurski to jedna z najlżejszych ras — waży tylko 2–3 kg.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:460,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1491485880348-85d48a9e5312?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop"]},{name:"Sokoke",emoji:"🌳",origin:"Kenia",size:"Mały",hair:"Krótka",activity:4,social:3,grooming:1,independ:3,desc:"Rzadka, naturalna rasa z kenijskich lasów. Dzikie cętki i niezależny charakter.",tags:["rzadki","naturalny","afrykański"],funfact:"Sokoke to jedna z najrzadszych ras kota na świecie, odkryta w 1977 roku.",price:"4000–8000 zł",priceMax:8000,vet:"niskie",monthly:510,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Australijski Mist",emoji:"🦘",origin:"Australia",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:2,desc:"Pierwsza rasa wyhodowana w Australii. Delikatne cętki i łagodny charakter.",tags:["australijski","łagodny","rodzinny"],funfact:"Australijski Mist wyhodowano specjalnie jako kot rodzinny w 1986 roku.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:480,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1603991396795-7ff7c49aca3a?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop"]},{name:"Europejski krótkowłosy",emoji:"🇪🇺",origin:"Europa",size:"Średni",hair:"Krótka",activity:4,social:3,grooming:1,independ:4,desc:"Naturalny europejski kot domowy podniesiony do rangi rasy. Zdrowy i niezależny.",tags:["naturalny","niezależny","zdrowy"],funfact:"Europejski krótkowłosy to właściwie ulepszona wersja klasycznego kota domowego.",price:"1000–2500 zł",priceMax:2500,vet:"niskie",monthly:420,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Eksotyczny krótkowłosy",emoji:"🥧",origin:"USA",size:"Średni",hair:"Krótka",activity:2,social:4,grooming:2,independ:2,desc:"Perski w pigułce — te same rysy, ale krótkie futro. Spokojny i mało wymagający.",tags:["spokojny","perski","łatwa pielęgnacja"],funfact:"Exotic Shorthair to wynik krzyżowania Perskiego z Brytyjczykiem.",price:"2500–5500 zł",priceMax:5500,vet:"wysokie",monthly:560,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1605450648855-63b00b8c6c51?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop"]},{name:"Manx",emoji:"🔵",origin:"Wyspa Man",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:1,independ:3,desc:"Kot bez ogona — wynik naturalnej mutacji. Okrągła sylwetka i skoczność.",tags:["bez ogona","wyspa Man","skoczny"],funfact:"Manx biegnie bokiem jak królik — zad jest wyższy niż przód przez brak ogona.",price:"2000–4000 zł",priceMax:4000,vet:"średnie",monthly:470,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop"]},{name:"Szkocki Prostouszny",emoji:"🏴",origin:"Szkocja",size:"Średni",hair:"Krótka/Długa",activity:3,social:4,grooming:2,independ:2,desc:"Odmiana Scottish Fold z prostymi uszami. Spokojny i przyjazny charakter.",tags:["proste uszy","spokojny","rodzinny"],funfact:"Scottish Straight to Fold bez mutacji usznej — często rodzi się w miotach z Foldem.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:500,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1530667912788-f976e8ee0bd5?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Burmilla",emoji:"🌸",origin:"Wielka Brytania",size:"Mały",hair:"Krótka",activity:3,social:4,grooming:1,independ:2,desc:"Srebrny, mieniący się kot o subtelnych cętkach. Połączenie Burmy i Chinchilli.",tags:["srebrny","delikatny","elegancki"],funfact:"Burmilla powstała przez przypadek w 1981 w UK — niepilnowana para.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:480,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=600&h=400&fit=crop"]},{name:"Amerykański krótkowłosy",emoji:"🇺🇸",origin:"USA",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:1,independ:3,desc:"Klasyczny, zdrowy kot o atletycznej budowie i miłym charakterze. Dobry myśliwy.",tags:["klasyczny","atletyczny","zdrowy"],funfact:"Przodkowie Amerk. krótkowłosego przybyli do Ameryki razem z kolonizatorami.",price:"1500–3500 zł",priceMax:3500,vet:"niskie",monthly:450,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Korat",emoji:"💚",origin:"Tajlandia",size:"Mały",hair:"Krótka",activity:3,social:4,grooming:1,independ:2,desc:"Starożytna tajska rasa o srebrzystoniebieskim futrze i zielonych oczach.",tags:["tajski","zielone oczy","starożytny"],funfact:"Korat uznawany jest w Tajlandii za symbol szczęścia i dobrego losu.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:470,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"Tonkinese",emoji:"💜",origin:"USA/Kanada",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:2,independ:1,desc:"Harmonijne połączenie cech kota syjamskiego i birmańskiego. Wesołe i towarzyskie.",tags:["wesoły","społeczny","inteligentny"],funfact:"Tonkijczycy to hybryda syjamskiego i burmijskiego.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:500,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1557162484-e36b7a75c8f6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=600&h=400&fit=crop"]},{name:"Pixie-Bob",emoji:"🐾",origin:"USA",size:"Duży",hair:"Krótka/Długa",activity:4,social:4,grooming:2,independ:3,desc:"Dzikie koty przypominające rysia. Wierność psia, wygląd dziki. Często wielopalczaste.",tags:["dziki wygląd","lojalny","duży"],funfact:"Pixie-Bob może mieć do 7 palców u każdej łapy — polydaktylia jest cechą rasy.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:500,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=600&h=400&fit=crop"]},{name:"Chausie",emoji:"🦁",origin:"USA/Egipt",size:"Duży",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Atletyczne, dzikie koty z domieszką kota dżungli. Wyjątkowo aktywne i inteligentne.",tags:["dziki","atletyczny","egzotyczny"],funfact:"Chausie pochodzi z krzyżowania kota domowego z kotem dżungli (Felis chaus).",price:"5000–12000 zł",priceMax:12000,vet:"wysokie",monthly:750,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Toyger",emoji:"🐯",origin:"USA",size:"Średni",hair:"Krótka",activity:4,social:4,grooming:1,independ:2,desc:"Miniaturowy tygrys domowy — paski jak u Bengalskiego, spokojniejszy charakter.",tags:["tygrys","paski","egzotyczny"],funfact:"Toyger stworzono specjalnie by wyglądał jak miniaturowy tygrys.",price:"3000–7000 zł",priceMax:7000,vet:"niskie",monthly:550,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1603991396795-7ff7c49aca3a?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Genetta",emoji:"🦓",origin:"USA",size:"Mały",hair:"Krótka",activity:5,social:4,grooming:1,independ:2,desc:"Miniaturowy wygląd genety afrykańskiej. Aktywny, inteligentny i ciekawski.",tags:["egzotyczny","cętkowany","mały"],funfact:"Genetta to krzyżówka Munchkina z Bengalskim — długie ciało i krótkie nogi.",price:"3000–6000 zł",priceMax:6000,vet:"średnie",monthly:530,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Ural Rex",emoji:"🔶",origin:"Rosja",size:"Średni",hair:"Kręcona",activity:3,social:4,grooming:2,independ:2,desc:"Rosyjski kot o kręconej sierści. Spokojny, towarzyski i rzadki poza Rosją.",tags:["kręcone futro","rosyjski","rzadki"],funfact:"Ural Rex jest bardzo rzadki — hodowany głównie na Uralu w Rosji.",price:"2000–4000 zł",priceMax:4000,vet:"niskie",monthly:470,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1530667912788-f976e8ee0bd5?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop"]},{name:"Kot Lykoi",emoji:"🐺",origin:"USA",size:"Mały",hair:"Cząstkowa",activity:4,social:4,grooming:1,independ:2,desc:"Naturalnie wyglądający jak wilkołak — częściowo bezwłosy z ciemną sierścią.",tags:["wilkołak","unikalny","naturalny"],funfact:"Lykoi to naturalna mutacja odkryta w 2010 — gen sprawia, że sierść rośnie nierówno.",price:"4000–8000 zł",priceMax:8000,vet:"średnie",monthly:540,category:"krotkowlose",photos:["https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop"]},{name:"Orientalny krótkowłosy",emoji:"🎭",origin:"USA/UK",size:"Mały",hair:"Krótka",activity:5,social:5,grooming:1,independ:1,desc:"Smukłe, eleganckie koty w wielu kolorach. Jak syjamski, ale z bogatszą paletą barw.",tags:["elegancki","rozmowny","towarzyski"],funfact:"Orientalny istnieje w ponad 300 kombinacjach kolorów i wzorów sierści.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:480,category:"orientalne",photos:["https://images.unsplash.com/photo-1616419958-0bb7e1e83720?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop"]},{name:"Tajski",emoji:"🇹🇭",origin:"Tajlandia",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:1,independ:2,desc:"Tradycyjny syjamski — nieco okrąglejszy. Naturalny i łagodny.",tags:["tradycyjny","łagodny","towarzyski"],funfact:"Tajski to oryginalny typ syjamskiego zanim hodowcy zaczęli go uszlachetniać.",price:"1500–3500 zł",priceMax:3500,vet:"niskie",monthly:460,category:"orientalne",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"Peterbald",emoji:"🦎",origin:"Rosja",size:"Średni",hair:"Brak/Krótka",activity:5,social:5,grooming:3,independ:1,desc:"Eleganckie koty — połączenie Sphynxa i Orientalnego. Bardzo towarzyskie.",tags:["bezwłosy","elegancki","przywiązany"],funfact:"Peterbald pochodzi ze skrzyżowania Donskiego Sfinksa z Orientalnym w 1994 roku.",price:"4000–8000 zł",priceMax:8000,vet:"wysokie",monthly:600,category:"orientalne",photos:["https://images.unsplash.com/photo-1616419958-0bb7e1e83720?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Havana Brown",emoji:"🟫",origin:"UK/USA",size:"Średni",hair:"Krótka",activity:4,social:4,grooming:1,independ:2,desc:"Jednolity brązowy kot o zielonych oczach. Towarzyski, ciekawski i inteligentny.",tags:["brązowy","elegancki","towarzyski"],funfact:"Havana Brown to jedyna rasa kota, która używa łap do eksploracji — jak ręce.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:490,category:"orientalne",photos:["https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop"]},{name:"Khao Manee",emoji:"💎",origin:"Tajlandia",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:2,desc:"Czysto białe koty o diamentowych oczach. Uważane za przynoszące szczęście.",tags:["biały","rzadki","szczęśliwy"],funfact:"Khao Manee były zarezerwowane tylko dla tajskiej rodziny królewskiej przez stulecia.",price:"5000–10000 zł",priceMax:10000,vet:"niskie",monthly:540,category:"orientalne",photos:["https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop"]},{name:"Mekong Bobtail",emoji:"🌊",origin:"Azja/Rosja",size:"Średni",hair:"Krótka",activity:4,social:5,grooming:1,independ:1,desc:"Syjamski kolor, skrócony ogon pomponiasty. Aktywny i bardzo towarzyski.",tags:["pompon ogon","syjamski kolor","towarzyski"],funfact:"Mekong Bobtail wywodzi się z rejonów rzeki Mekong — hodowany przez stulecia.",price:"2000–4000 zł",priceMax:4000,vet:"niskie",monthly:470,category:"orientalne",photos:["https://images.unsplash.com/photo-1557162484-e36b7a75c8f6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1492370284958-c20b15c692d2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=600&h=400&fit=crop"]},{name:"Japoński Bobtail",emoji:"🇯🇵",origin:"Japonia",size:"Mały",hair:"Krótka/Długa",activity:4,social:5,grooming:2,independ:2,desc:"Symbol szczęścia w Japonii — kot z pomponiastym ogonem. Bardzo towarzyski.",tags:["pompon ogon","japoński","szczęśliwy"],funfact:"Japoński Bobtail to podstawa figurki Maneki-neko — kota szczęścia z machającą łapą.",price:"2000–4500 zł",priceMax:4500,vet:"niskie",monthly:480,category:"orientalne",photos:["https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop"]},{name:"Kurylski Bobtail",emoji:"🏝️",origin:"Rosja/Japonia",size:"Średni",hair:"Krótka/Długa",activity:4,social:4,grooming:2,independ:3,desc:"Naturalne koty z pomponem zamiast ogona. Inteligentne i zrównoważone.",tags:["pompon ogon","naturalny","inteligentny"],funfact:"Kurylski Bobtail pochodzi z wysp Kurylskich i jest bardzo rzadki poza Rosją.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:490,category:"orientalne",photos:["https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1513245543132-31f507417b26?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Sphynx",emoji:"🌑",origin:"Kanada",size:"Średni",hair:"Brak",activity:4,social:5,grooming:4,independ:1,desc:"Bezwłose koty o ciepłej skórze i mocno towarzyskiej naturze. Potrzebują kąpieli.",tags:["bezwłosy","towarzyski","ciepły"],funfact:"Sphynx nie jest całkowicie nagi — ma cienki puch. Wymaga cotygodniowych kąpieli.",price:"4000–8000 zł",priceMax:8000,vet:"wysokie",monthly:700,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Doński Sfinks",emoji:"🦎",origin:"Rosja",size:"Średni",hair:"Brak",activity:4,social:5,grooming:3,independ:1,desc:"Muskularne nagie koty. Przywiązane do człowieka. Różnią się od kanadyjskiego Sphynxa.",tags:["bezwłosy","hipoalergiczny","rosyjski"],funfact:"Doński Sfinks odkryto w 1987 w Rostowie nad Donem przez przypadek.",price:"3000–6000 zł",priceMax:6000,vet:"wysokie",monthly:620,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1616419958-0bb7e1e83720?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Munchkin",emoji:"🐈",origin:"USA",size:"Mały",hair:"Krótka",activity:4,social:4,grooming:2,independ:2,desc:"Koty o wyjątkowo krótkich łapkach. Zwinne, ciekawskie i pełne energii.",tags:["małe łapki","zwinny","uroczy"],funfact:"Mimo krótkich nóg Munchkin biega szybko i jest świetnym myśliwym.",price:"3000–6000 zł",priceMax:6000,vet:"średnie",monthly:520,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1491485880348-85d48a9e5312?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Savannah",emoji:"🦒",origin:"USA",size:"Duży",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Imponujące, wysokie koty o egzotycznym wyglądzie. Krzyżówka z serwalem. Dla doświadczonych.",tags:["egzotyczny","energiczny","duży"],funfact:"Savannah F1 może ważyć do 12 kg i skakać na 3 metry.",price:"8000–25000 zł",priceMax:25000,vet:"wysokie",monthly:900,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop"]},{name:"Devon Rex",emoji:"👽",origin:"Wielka Brytania",size:"Mały",hair:"Falowana",activity:5,social:5,grooming:1,independ:1,desc:"Koty o dużych uszach i falistej sierści. Żywiołowe i niezwykle kontaktowe.",tags:["duże uszy","falowana sierść","wesoły"],funfact:"Devon Rex wygląda jak elf lub alien — wielkie uszy, wielkie oczy, mały nos.",price:"3000–6000 zł",priceMax:6000,vet:"średnie",monthly:500,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop"]},{name:"Cornish Rex",emoji:"🌀",origin:"Wielka Brytania",size:"Mały",hair:"Falowana",activity:5,social:5,grooming:1,independ:1,desc:"Smukłe koty o głęboko falistej sierści. Bardzo energiczne i towarzyskie.",tags:["falowana sierść","energiczny","smukły"],funfact:"Cornish Rex ma mutację futra — tylko podszerstek, zero włosów osłonowych.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:490,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop"]},{name:"Brytyjski długowłosy",emoji:"🍞",origin:"Wielka Brytania",size:"Średni",hair:"Długa",activity:2,social:3,grooming:4,independ:4,desc:"Długowłosa wersja Brytyjczyka. Spokojny, puszysty i niezwykle uroczy.",tags:["puszysty","spokojny","rodzinny"],funfact:"British Longhair to efekt naturalnej mutacji długiej sierści u Brytyjczyka.",price:"2500–5000 zł",priceMax:5000,vet:"niskie",monthly:520,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop"]},{name:"German Rex",emoji:"🇩🇪",origin:"Niemcy",size:"Średni",hair:"Falowana",activity:4,social:4,grooming:1,independ:2,desc:"Koty o falistej sierści podobnej do Cornish Rex, ale z grubszym futrem.",tags:["falowana sierść","niemiecki","towarzyski"],funfact:"German Rex to pierwsza rasa kota z falistą sierścią, odkryta w latach 40.",price:"2000–4000 zł",priceMax:4000,vet:"niskie",monthly:470,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=600&h=400&fit=crop"]},{name:"Dwelf",emoji:"🧝",origin:"USA",size:"Mały",hair:"Brak",activity:4,social:5,grooming:3,independ:1,desc:"Hybryda Munchkina, Sphynxa i American Curl. Niskie, nagie koty z zakręconymi uszami.",tags:["hybryda","bezwłosy","unikalny"],funfact:"Dwelf to nowa rasa — powstała w 2007 roku w USA.",price:"5000–10000 zł",priceMax:10000,vet:"wysokie",monthly:650,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1616419958-0bb7e1e83720?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"]},{name:"Bambino",emoji:"👶",origin:"USA",size:"Mały",hair:"Brak",activity:4,social:5,grooming:3,independ:1,desc:"Krzyżówka Munchkina i Sphynxa. Niski, bezwłosy kot o wielkich uszach.",tags:["małe łapki","bezwłosy","towarzyski"],funfact:"Bambino to włoskie słowo oznaczające 'dziecko' — ze względu na uroczy wygląd.",price:"4000–8000 zł",priceMax:8000,vet:"wysokie",monthly:600,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1491485880348-85d48a9e5312?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Serengeti",emoji:"🌅",origin:"USA",size:"Średni",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Krzyżówka Bengalskiego i Orientalnego. Dzikie cętki, ale całkowicie domowy charakter.",tags:["cętkowany","aktywny","egzotyczny"],funfact:"Serengeti stworzono by wyglądał jak serwal, ale bez domieszki dzikiego kota.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:520,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop"]},{name:"Highlander",emoji:"⛰️",origin:"USA",size:"Duży",hair:"Krótka/Długa",activity:4,social:4,grooming:2,independ:2,desc:"Koty z zakręconymi uszami i krótkim ogonem. Teatralny charakter i dziki wygląd.",tags:["zakręcone uszy","dziki wygląd","teatralny"],funfact:"Highlander to nowa rasa — powstała w 2004 z krzyżówki Desert Lynx i Jungle Curl.",price:"3000–6000 zł",priceMax:6000,vet:"średnie",monthly:530,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1530667912788-f976e8ee0bd5?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=600&h=400&fit=crop"]},{name:"Neva Masquerade",emoji:"🎭",origin:"Rosja",size:"Duży",hair:"Długa",activity:4,social:4,grooming:3,independ:3,desc:"Kolorowa odmiana Syberyjskiego — syjamskie znaczenia na puszystym futrze.",tags:["hipoalergiczny","kolorowy","naturalny"],funfact:"Neva Masquerade to naturalna odmiana Syberyjskiego, nie hybryda.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:580,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1464550883968-cec281c19761?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1596854407944-bf87f6fdd049?w=600&h=400&fit=crop"]},{name:"Ojos Azules",emoji:"🔷",origin:"USA",size:"Średni",hair:"Krótka",activity:3,social:4,grooming:1,independ:2,desc:"Rzadka rasa o niezwykle intensywnie niebieskich oczach, niezależnie od koloru futra.",tags:["rzadki","niebieskie oczy","unikalny"],funfact:"Ojos Azules to hiszpańskie 'niebieskie oczy' — rzadka mutacja genetyczna.",price:"4000–8000 zł",priceMax:8000,vet:"niskie",monthly:500,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=600&h=400&fit=crop"]},{name:"California Spangled",emoji:"🌟",origin:"USA",size:"Średni",hair:"Krótka",activity:5,social:4,grooming:1,independ:3,desc:"Koty wyglądające jak małe lamparty. Stworzone by zwrócić uwagę na ochronę dzikich kotów.",tags:["egzotyczny","cętkowany","aktywny"],funfact:"California Spangled stworzono w 1971 by przypominać lamparta — nie ma domieszki dzikiego kota.",price:"3000–6000 zł",priceMax:6000,vet:"niskie",monthly:520,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1607433194434-fc2e44e3a9fe?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1591871937573-74dbba515c4c?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1603991396795-7ff7c49aca3a?w=600&h=400&fit=crop"]},{name:"Minuet",emoji:"🎀",origin:"USA",size:"Mały",hair:"Krótka/Długa",activity:3,social:5,grooming:3,independ:1,desc:"Krzyżówka Perskiego i Munchkina. Słodki, niski kot o puszystym futrze i krótkich łapkach.",tags:["małe łapki","słodki","rodzinny"],funfact:"Minuet dawniej nazywany Napoleonem — nazwa zmieniona w 2015 roku.",price:"3500–7000 zł",priceMax:7000,vet:"średnie",monthly:550,category:"egzotyczne",photos:["https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1605450648855-63b00b8c6c51?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop"]}];
+
+const HODOWLE=[
+  {name:"Pol-Euro-Cat",breed:"Maine Coon",loc:"Warszawa",fed:"FIFe"},{name:"Ragdoll Royale",breed:"Ragdoll",loc:"Kraków",fed:"FIFe"},
+  {name:"Bengal Wild Heart",breed:"Bengalski",loc:"Wrocław",fed:"TICA"},{name:"British Empire",breed:"Brytyjski krótkowłosy",loc:"Poznań",fed:"FIFe"},
+  {name:"Syberian Forest",breed:"Syberyjski",loc:"Gdańsk",fed:"WCF"},{name:"Blue Neva",breed:"Rosyjski niebieski",loc:"Warszawa",fed:"FIFe"},
+  {name:"Sphynx Solaris",breed:"Sphynx",loc:"Wrocław",fed:"TICA"},{name:"Persian Palace",breed:"Perski",loc:"Łódź",fed:"WCF"},
+  {name:"MaineCoon Mazovia",breed:"Maine Coon",loc:"Warszawa",fed:"WCF"},{name:"Siamese Star",breed:"Syjamski",loc:"Kraków",fed:"FIFe"},
+  {name:"Ragdoll Dream",breed:"Ragdoll",loc:"Gdańsk",fed:"TICA"},{name:"Bengalski Świat",breed:"Bengalski",loc:"Wrocław",fed:"WCF"},
+  {name:"Nordic Cats PL",breed:"Norweski Leśny",loc:"Warszawa",fed:"FIFe"},{name:"Scottish Paradise",breed:"Szkocki Zwisłouchy",loc:"Poznań",fed:"WCF"},
+  {name:"Devon Magic",breed:"Devon Rex",loc:"Kraków",fed:"TICA"},{name:"Syberia na Mazowszu",breed:"Syberyjski",loc:"Warszawa",fed:"FIFe"},
+  {name:"Birmańskie Sny",breed:"Birman",loc:"Łódź",fed:"WCF"},{name:"Abisyński Świat",breed:"Abisyński",loc:"Gdańsk",fed:"FIFe"},
+  {name:"Syjamski Dom",breed:"Syjamski",loc:"Wrocław",fed:"WCF"},{name:"Munchkin PL",breed:"Munchkin",loc:"Warszawa",fed:"TICA"}
+];
+
+// ════════════════════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════════════════════
+function storageGet(key,def='[]'){try{return localStorage.getItem(key)||def;}catch(e){return def;}}
+function storageSet(key,val){try{localStorage.setItem(key,val);}catch(e){}}
+
+// ════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════
+let favorites=new Set(JSON.parse(storageGet('catFavorites','[]')));
+let compareSet=new Set();
+let aiHistory=[];
+let aiTyping=false;
+let recentlyViewed=JSON.parse(storageGet('catRecent','[]'));
+
+// ════════════════════════════════════════════════════
+// TOAST NOTIFICATIONS
+// ════════════════════════════════════════════════════
+function showToast(msg,duration=2800){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className='toast';t.innerHTML=msg;
+  c.appendChild(t);
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{t.classList.add('show');});});
+  setTimeout(()=>{t.classList.remove('show');t.classList.add('hide');setTimeout(()=>t.remove(),350);},duration);
+}
+
+// ════════════════════════════════════════════════════
+// SCROLL PROGRESS & BACK TO TOP
+// ════════════════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  const sc=document.documentElement.scrollTop;
+  const sh=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  document.getElementById('scrollProgress').style.width=(sc/sh*100)+'%';
+  document.getElementById('backTop').classList.toggle('visible',sc>400);
+  // hero parallax
+  const hp=document.getElementById('heroParallax');
+  if(hp&&sc<window.innerHeight){hp.style.transform=`translateY(${sc*0.12}px)`;}
+});
+
+// ════════════════════════════════════════════════════
+// TYPEWRITER HERO
+// ════════════════════════════════════════════════════
+function initTypewriter(){
+  const h=document.getElementById('heroTitle');
+  const wraps=h.querySelectorAll('.typewriter-wrap');
+  const words=[['Odkryj','Świat'],['Rasowych','Kotów']];
+  words.forEach((pair,wi)=>{
+    const w=wraps[wi];
+    w.innerHTML='';
+    pair.forEach((word,i)=>{
+      const s=document.createElement('span');
+      s.className='typewriter-word';
+      s.textContent=word+' ';
+      w.appendChild(s);
+      setTimeout(()=>s.classList.add('show'),(wi*2+i)*160+200);
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════
+// SCROLL REVEAL (IntersectionObserver)
+// ════════════════════════════════════════════════════
+function initScrollReveal(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        // animate counters when stats visible
+        if(e.target.classList.contains('counter'))animateCounter(e.target);
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.counter').forEach(el=>obs.observe(el));
+}
+
+// ════════════════════════════════════════════════════
+// COUNTER ANIMATION
+// ════════════════════════════════════════════════════
+function animateCounter(el){
+  const target=parseInt(el.dataset.target)||0;
+  const suffix=el.dataset.suffix||'';
+  const dur=1200,steps=50,step=dur/steps;
+  let cur=0;
+  const inc=target/steps;
+  const iv=setInterval(()=>{
+    cur=Math.min(cur+inc,target);
+    el.textContent=Math.round(cur)+suffix;
+    if(cur>=target)clearInterval(iv);
+  },step);
+}
+
+// ════════════════════════════════════════════════════
+// MOBILE MENU
+// ════════════════════════════════════════════════════
+function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');}
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('mobileMenu');
+  const btn=document.querySelector('.nav-toggle');
+  if(menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target))menu.classList.remove('open');
+});
+
+// ════════════════════════════════════════════════════
+// FAVORITES
+// ════════════════════════════════════════════════════
+function saveFavorites(){
+  storageSet('catFavorites',JSON.stringify([...favorites]));
+  updateFavCount();
+  renderFavorites();
+}
+function updateFavCount(){
+  const count=favorites.size;
+  const el=document.getElementById('navFavCount');
+  el.textContent=count;
+  el.classList.toggle('visible',count>0);
+  document.getElementById('ulubione').classList.toggle('hidden',count===0);
+  // bump animation
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+  setTimeout(()=>el.classList.remove('bump'),350);
+}
+function toggleFavorite(name,btn){
+  const adding=!favorites.has(name);
+  if(adding)favorites.add(name);else favorites.delete(name);
+  saveFavorites();
+  document.querySelectorAll('.heart-btn').forEach(b=>{
+    if(b.dataset.breed===name){
+      b.classList.toggle('liked',favorites.has(name));
+      b.textContent=favorites.has(name)?'❤️':'🤍';
+    }
+  });
+  btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');
+  setTimeout(()=>btn.classList.remove('pop'),400);
+  showToast(adding?`❤️ <strong>${name}</strong> dodany/a do ulubionych!`:`🤍 <strong>${name}</strong> usunięty/a z ulubionych`);
+}
+function renderFavorites(){
+  const el=document.getElementById('favContent');
+  const favBreeds=BREEDS.filter(b=>favorites.has(b.name));
+  if(!favBreeds.length){
+    el.innerHTML=`<div class="fav-empty"><div class="fav-empty-icon">🤍</div><h3>Brak ulubionych ras</h3><p>Kliknij serduszko obok nazwy rasy, aby dodać do ulubionych.</p></div>`;return;
+  }
+  el.innerHTML=`<button class="fav-export-btn" onclick="exportFavoritesPDF()">📄 Pobierz PDF z ulubionymi</button><div class="fav-grid">${favBreeds.map(b=>buildBreedCard(b)).join('')}</div>`;
+}
+
+// ════════════════════════════════════════════════════
+// PDF EXPORT
+// ════════════════════════════════════════════════════
+function exportFavoritesPDF(){
+  const favBreeds=BREEDS.filter(b=>favorites.has(b.name));
+  if(!favBreeds.length)return;
+  let html=`<html><head><meta charset="UTF-8"><title>Moje ulubione rasy kotów</title><style>body{font-family:Georgia,serif;max-width:800px;margin:0 auto;padding:2rem;color:#1a1410}h1{color:#c9a96e;border-bottom:2px solid #c9a96e;padding-bottom:.5rem}.breed{margin-bottom:2rem;padding:1rem;border:1px solid #ddd;border-radius:8px;page-break-inside:avoid}.breed h2{margin:0 0 .5rem}.tag{display:inline-block;background:#ede4d6;padding:.1rem .5rem;border-radius:10px;font-size:.8rem;margin:.2rem}.stat{display:flex;justify-content:space-between;font-size:.85rem;padding:.2rem 0;border-bottom:1px solid #f0ebe4}p{font-size:.9rem;color:#5a4a35}.price{color:#8b6f47;font-weight:bold}</style></head><body><h1>🐾 Moje Ulubione Rasy Kotów</h1><p>Wygenerowano: ${new Date().toLocaleDateString('pl-PL')}</p>`;
+  favBreeds.forEach(b=>{html+=`<div class="breed"><h2>${b.emoji} ${b.name}</h2><p>📍 ${b.origin} | ${b.size} | Sierść: ${b.hair}</p><p>${b.desc}</p><div class="stat"><span>Aktywność</span><span>${'★'.repeat(b.activity)}${'☆'.repeat(5-b.activity)}</span></div><div class="stat"><span>Towarzyskość</span><span>${'★'.repeat(b.social)}${'☆'.repeat(5-b.social)}</span></div><div class="stat"><span>Pielęgnacja</span><span>${'★'.repeat(b.grooming)}${'☆'.repeat(5-b.grooming)}</span></div><p class="price">Cena kociaka: ${b.price}</p><p>💡 ${b.funfact}</p><div>${b.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`;});
+  html+=`</body></html>`;
+  const win=window.open('','_blank');
+  if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),500);}
+}
+
+// ════════════════════════════════════════════════════
+// RECENTLY VIEWED
+// ════════════════════════════════════════════════════
+function addRecentlyViewed(name){
+  recentlyViewed=recentlyViewed.filter(n=>n!==name);
+  recentlyViewed.unshift(name);
+  if(recentlyViewed.length>6)recentlyViewed.pop();
+  storageSet('catRecent',JSON.stringify(recentlyViewed));
+  renderRecentlyViewed();
+}
+function renderRecentlyViewed(){
+  const box=document.getElementById('recentlyViewedBox');
+  const chips=document.getElementById('recentlyViewedChips');
+  if(!recentlyViewed.length){box.classList.remove('show');return;}
+  box.classList.add('show');
+  chips.innerHTML=recentlyViewed.map(name=>{
+    const b=BREEDS.find(x=>x.name===name);
+    return `<span class="rv-chip" onclick="scrollToBreed('${name.replace(/'/g,"\\'")}')">
+      ${b?b.emoji:''} ${name}</span>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// COMPARE
+// ════════════════════════════════════════════════════
+function toggleCompare(name,chk){
+  if(chk.checked){
+    if(compareSet.size>=3){chk.checked=false;showToast('⚠️ Możesz porównać maks. <strong>3 rasy</strong> jednocześnie.');return;}
+    compareSet.add(name);
+    showToast(`📊 <strong>${name}</strong> dodany/a do porównania`);
+  }else{compareSet.delete(name);}
+  BREEDS.forEach(b=>{
+    const safeId=b.name.replace(/[^a-zA-Z0-9]/g,'_');
+    const card=document.getElementById('bmc-'+safeId);
+    if(card)card.classList.toggle('compare-selected',compareSet.has(b.name));
+  });
+  updateCompareBar();
+}
+function updateCompareBar(){
+  const bar=document.getElementById('compareBar');
+  const slots=document.getElementById('compareSlots');
+  bar.classList.toggle('visible',compareSet.size>0);
+  document.body.style.paddingBottom=compareSet.size>0?'80px':'0';
+  slots.innerHTML=[...compareSet].map(name=>{
+    const b=BREEDS.find(x=>x.name===name);
+    return `<div class="compare-slot">${b?b.emoji:''} ${name} <button class="rm-slot" onclick="removeCompare('${name.replace(/'/g,"\\'")}')">✕</button></div>`;
+  }).join('');
+}
+function removeCompare(name){
+  compareSet.delete(name);
+  document.querySelectorAll('.compare-chk').forEach(chk=>{if(chk.dataset.breed===name)chk.checked=false;});
+  const safeId=name.replace(/[^a-zA-Z0-9]/g,'_');
+  const card=document.getElementById('bmc-'+safeId);
+  if(card)card.classList.remove('compare-selected');
+  updateCompareBar();
+}
+function clearCompare(){compareSet.forEach(name=>removeCompare(name));}
+function openCompareModal(){
+  if(compareSet.size<2){showToast('⚠️ Wybierz co najmniej <strong>2 rasy</strong> do porównania.');return;}
+  const selected=[...compareSet].map(name=>BREEDS.find(b=>b.name===name)).filter(Boolean);
+  const rows=[
+    ['Pochodzenie',b=>b.origin],['Rozmiar',b=>b.size],['Sierść',b=>b.hair],
+    ['Aktywność',b=>bars5(b.activity)],['Towarzyskość',b=>bars5(b.social)],
+    ['Pielęgnacja',b=>bars5(b.grooming)],['Niezależność',b=>bars5(b.independ)],
+    ['Cena kociaka',b=>`<strong style="color:var(--warm)">${b.price}</strong>`],
+    ['Koszt/mies.',b=>`~${b.monthly} zł`],['Weterynarz',b=>b.vet],
+    ['Ciekawostka',b=>`<em style="font-size:.8rem">${b.funfact}</em>`],
+  ];
+  const th=selected.map(b=>`<th>${b.emoji} ${b.name}</th>`).join('');
+  const tbody=rows.map(([label,fn])=>`<tr><td><strong>${label}</strong></td>${selected.map(b=>`<td>${fn(b)}</td>`).join('')}</tr>`).join('');
+  document.getElementById('compareModalBody').innerHTML=`<div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th>Cecha</th>${th}</tr></thead><tbody>${tbody}</tbody></table></div>`;
+  document.getElementById('compareModal').classList.add('open');
+}
+function bars5(v){return `<div class="cmp-bar-inline">${Array.from({length:5},(_,i)=>`<span class="${i<v?'fill':''}">&nbsp;</span>`).join('')}</div>`;}
+function closeCompareModal(){document.getElementById('compareModal').classList.remove('open');}
+
+// ════════════════════════════════════════════════════
+// BUILD BREED CARD
+// ════════════════════════════════════════════════════
+function buildBreedCard(b){
+  const imgs=b.photos||[];
+  const bars=[{l:'Aktywność',v:b.activity},{l:'Towarzyskość',v:b.social},{l:'Pielęgnacja',v:b.grooming},{l:'Niezależność',v:b.independ}];
+  const isLiked=favorites.has(b.name);
+  const isCompared=compareSet.has(b.name);
+  const safeId=b.name.replace(/[^a-zA-Z0-9]/g,'_');
+  const escapedName=b.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  return `<div class="bmc${isCompared?' compare-selected':''}" id="bmc-${safeId}" onmouseenter="cardTilt(this,true)" onmouseleave="cardTilt(this,false)" onmousemove="cardTiltMove(event,this)">
+    <div class="bmc-gallery" onclick="openLightbox('${safeId}',0)">
+      <img class="bmc-gallery-main" src="${imgs[0]||''}" alt="${b.name}" loading="lazy"
+        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect fill=%22%23ede4d6%22 width=%22400%22 height=%22200%22/><text x=%22200%22 y=%22110%22 font-size=%2250%22 text-anchor=%22middle%22>${b.emoji}</text></svg>'"
+        data-imgs='${JSON.stringify(imgs).replace(/'/g,"&#39;")}' data-breed-id="${safeId}" data-idx='0'>
+      <button class="bmc-gallery-nav prev" onclick="bmcNav(this,-1,event)">‹</button>
+      <button class="bmc-gallery-nav next" onclick="bmcNav(this,1,event)">›</button>
+      <div class="bmc-img-counter"><span class="bmc-cur">1</span>/${imgs.length}</div>
+      <div class="bmc-lightbox-hint">🔍 Powiększ</div>
+    </div>
+    <div class="bmc-body">
+      <div class="bmc-header">
+        <h3 onclick="toggleBmc(this.closest('.bmc'))">${b.emoji} ${b.name}</h3>
+        <button class="heart-btn ${isLiked?'liked':''}" data-breed="${b.name}"
+          onclick="toggleFavorite('${escapedName}',this)"
+          title="${isLiked?'Usuń z ulubionych':'Dodaj do ulubionych'}">${isLiked?'❤️':'🤍'}</button>
+      </div>
+      <div class="bmc-origin" onclick="toggleBmc(this.closest('.bmc'))">📍 ${b.origin}</div>
+      <div class="bmc-desc" onclick="toggleBmc(this.closest('.bmc'))">${b.desc}</div>
+      <div class="bmc-tags">${b.tags.map(t=>`<span class="bmc-tag">${t}</span>`).join('')}</div>
+      <div class="compare-check-wrap">
+        <input type="checkbox" class="compare-chk" id="chk-${safeId}" data-breed="${b.name}"
+          ${isCompared?'checked':''} onchange="toggleCompare('${escapedName}',this)">
+        <label for="chk-${safeId}">Porównaj</label>
+      </div>
+    </div>
+    <div class="bmc-expanded">
+      <div class="bmc-bars">${bars.map(r=>`<div class="bmc-bar-row"><div class="bmc-bar-lbl"><span>${r.l}</span><span>${r.v}/5</span></div><div class="bmc-bar-bg"><div class="bmc-bar-fill" style="--target-width:${r.v*20}%"></div></div></div>`).join('')}</div>
+      <div class="bmc-price">Cena kociaka: <strong>${b.price}</strong></div>
+      <div class="bmc-price">Koszt miesięczny: <strong>~${b.monthly} zł</strong></div>
+      <div style="margin-top:.75rem;font-size:.78rem;color:var(--gold);font-style:italic">💡 ${b.funfact}</div>
+    </div>
+  </div>`;
+}
+
+// 3D TILT
+function cardTilt(card,on){if(!on){card.style.transform='';card.style.transition='transform .4s ease';}}
+function cardTiltMove(e,card){
+  const r=card.getBoundingClientRect();
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const dx=(e.clientX-cx)/(r.width/2),dy=(e.clientY-cy)/(r.height/2);
+  card.style.transition='transform .1s ease';
+  card.style.transform=`perspective(800px) rotateY(${dx*5}deg) rotateX(${-dy*5}deg) translateY(-4px)`;
+}
+
+// ════════════════════════════════════════════════════
+// BREEDS MEGA GRID
+// ════════════════════════════════════════════════════
+let megaFilter='wszystkie',megaSearch='',megaBudget=950;
+
+function initBreedsMega(){
+  const bar=document.getElementById('breedsFilterBar');
+  const labels={wszystkie:'Wszystkie (70)',dlugowlose:'Długowłose',krotkowlose:'Krótkowłose',orientalne:'Orientalne',egzotyczne:'Egzotyczne'};
+  bar.innerHTML=Object.entries(labels).map(([k,v])=>`<button class="bf-btn ${k==='wszystkie'?'active':''}" onclick="setMegaFilter('${k}',this)">${v}</button>`).join('');
+  renderBreedsMega();
+  updateFavCount();
+  renderExpensive();
+  renderRecentlyViewed();
+}
+function setMegaFilter(cat,btn){
+  megaFilter=cat;
+  document.querySelectorAll('.bf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBreedsMega();
+}
+function filterBreedsMega(){
+  megaSearch=document.getElementById('breedsSearchInput').value.toLowerCase();
+  renderBreedsMega();
+}
+function onBudgetChange(){
+  megaBudget=parseInt(document.getElementById('budgetSlider').value);
+  document.getElementById('budgetVal').textContent=megaBudget>=950?'Bez limitu':`do ${megaBudget} zł/mies.`;
+  renderBreedsMega();
+}
+function resetBudget(){
+  document.getElementById('budgetSlider').value=950;megaBudget=950;
+  document.getElementById('budgetVal').textContent='Bez limitu';
+  renderBreedsMega();
+}
+
+// highlight matching text
+function highlight(text,query){
+  if(!query)return text;
+  const re=new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re,'<span class="hl">$1</span>');
+}
+
+function renderBreedsMega(){
+  const grid=document.getElementById('breedsMegaGrid');
+  grid.innerHTML=Array.from({length:8},()=>`<div class="bmc-skeleton skeleton"></div>`).join('');
+  setTimeout(()=>{
+    const filtered=BREEDS.filter(b=>{
+      const matchCat=megaFilter==='wszystkie'||b.category===megaFilter;
+      const matchSearch=!megaSearch||b.name.toLowerCase().includes(megaSearch)||b.origin.toLowerCase().includes(megaSearch)||b.tags.some(t=>t.toLowerCase().includes(megaSearch))||b.desc.toLowerCase().includes(megaSearch);
+      const matchBudget=megaBudget>=950||b.monthly<=megaBudget;
+      return matchCat&&matchSearch&&matchBudget;
+    });
+    document.getElementById('breedsCount').textContent=`Wyświetlam ${filtered.length} z ${BREEDS.length} ras`;
+    if(!filtered.length){grid.innerHTML=`<div class="no-results">😿 Brak ras pasujących do kryteriów</div>`;return;}
+    grid.innerHTML=filtered.map(b=>buildBreedCard(b)).join('');
+    // stagger reveal on cards
+    grid.querySelectorAll('.bmc').forEach((card,i)=>{
+      card.style.opacity='0';card.style.transform='translateY(16px)';
+      card.style.transition=`opacity .35s ${Math.min(i*30,300)}ms ease, transform .35s ${Math.min(i*30,300)}ms ease`;
+      requestAnimationFrame(()=>{requestAnimationFrame(()=>{card.style.opacity='1';card.style.transform='';});});
+    });
+  },150);
+}
+
+function toggleBmc(card){
+  const expanded=card.querySelector('.bmc-expanded');
+  const opening=!expanded.classList.contains('open');
+  expanded.classList.toggle('open',opening);
+  if(opening){
+    // animate bars
+    setTimeout(()=>{
+      card.querySelectorAll('.bmc-bar-fill').forEach(f=>f.classList.add('animated'));
+    },50);
+    // track recently viewed
+    const nameEl=card.querySelector('h3');
+    if(nameEl){const name=nameEl.textContent.replace(/^[^\w\s]/,'').trim();addRecentlyViewed(name);}
+  }
+}
+function bmcNav(btn,dir,e){
+  e.stopPropagation();
+  const card=btn.closest('.bmc-gallery');
+  const img=card.querySelector('.bmc-gallery-main');
+  const imgs=JSON.parse(img.getAttribute('data-imgs')||'[]');
+  let idx=parseInt(img.dataset.idx)+dir;
+  if(idx<0)idx=imgs.length-1;if(idx>=imgs.length)idx=0;
+  img.style.opacity='0.5';img.src=imgs[idx];img.dataset.idx=idx;
+  img.onload=()=>img.style.opacity='1';
+  card.querySelector('.bmc-cur').textContent=idx+1;
+}
+
+// ════════════════════════════════════════════════════
+// LIGHTBOX
+// ════════════════════════════════════════════════════
+let lbImgs=[],lbIdx=0,lbName='';
+function openLightbox(safeId,startIdx){
+  const card=document.getElementById('bmc-'+safeId);if(!card)return;
+  const img=card.querySelector('.bmc-gallery-main');
+  lbImgs=JSON.parse(img.getAttribute('data-imgs')||'[]');
+  lbName=card.querySelector('h3').textContent;
+  lbIdx=startIdx||parseInt(img.dataset.idx)||0;
+  showLightboxImg();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function showLightboxImg(){
+  const img=document.getElementById('lightboxImg');
+  img.style.opacity='0';
+  img.src=lbImgs[lbIdx]||'';
+  img.onload=()=>{img.style.opacity='1';};
+  document.getElementById('lightboxCaption').textContent=`${lbName} — Zdjęcie ${lbIdx+1} z ${lbImgs.length}`;
+}
+function lightboxNav(dir){lbIdx=(lbIdx+dir+lbImgs.length)%lbImgs.length;showLightboxImg();}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('lightbox').classList.contains('open')){
+    if(e.key==='ArrowRight')lightboxNav(1);if(e.key==='ArrowLeft')lightboxNav(-1);if(e.key==='Escape')closeLightbox();
+  }
+  if(document.getElementById('compareModal').classList.contains('open')&&e.key==='Escape')closeCompareModal();
+});
+
+// ════════════════════════════════════════════════════
+// EXPENSIVE
+// ════════════════════════════════════════════════════
+function renderExpensive(){
+  const sorted=[...BREEDS].sort((a,b)=>b.priceMax-a.priceMax).slice(0,10);
+  const labels=['🥇','🥈','🥉','4.','5.','6.','7.','8.','9.','10.'];
+  document.getElementById('expensiveGrid').innerHTML=sorted.map((b,i)=>`
+    <div class="exp-card reveal reveal-delay-${(i%4)+1}">
+      <div class="exp-rank">${labels[i]}</div>
+      <div class="exp-emoji">${b.emoji}</div>
+      <div class="exp-name">${b.name}</div>
+      <div class="exp-price">${b.price}</div>
+      <div class="exp-sub">~${b.monthly} zł/mies.</div>
+    </div>`).join('');
+  // re-observe new cards
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:.15});
+  document.querySelectorAll('#expensiveGrid .reveal').forEach(el=>obs.observe(el));
+}
+
+// ════════════════════════════════════════════════════
+// AI CHAT
+// ════════════════════════════════════════════════════
+const AI_BREEDS_INFO=BREEDS.map(b=>`${b.name}(${b.origin},akt:${b.activity}/5,tow:${b.social}/5,piel:${b.grooming}/5,cena:${b.price},mies:${b.monthly}zł)`).join('|');
+const AI_SYSTEM=`Jesteś ekspertem felinologiem i przyjaznym doradcą pomagającym wybrać idealną rasę kota. Znasz wszystkie ${BREEDS.length} ras w bazie. Mówisz po polsku, jesteś ciepły i pomocny. Gdy polecasz rasę, podaj jej emoji, nazwę i krótki opis. Odpowiadaj zwięźle (max 3-4 zdania chyba że pytanie wymaga więcej). Bazy ras: ${AI_BREEDS_INFO}`;
+
+async function sendAI(){
+  const input=document.getElementById('aiInput');
+  const msg=input.value.trim();
+  if(!msg||aiTyping)return;
+  input.value='';
+  addMsg(msg,'user');
+  aiHistory.push({role:'user',content:msg});
+  setTyping(true);
+  try{
+    // UWAGA: Klucz API musi być ustawiony po stronie serwera / proxy dla produkcji!
+    // Dla testów lokalnych dodaj klucz bezpośrednio (nigdy nie commituj do repo publicznego)
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'anthropic-version':'2023-06-01',
+        'x-anthropic-dangerous-direct-browser-access':'true'
+        // 'x-api-key': 'TWÓJ_KLUCZ_TUTAJ'
+      },
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AI_SYSTEM,messages:aiHistory})
+    });
+    const data=await resp.json();
+    const text=data.content?.[0]?.text||'Przepraszam, coś poszło nie tak. Spróbuj ponownie.';
+    setTyping(false);addMsg(text,'ai');
+    aiHistory.push({role:'assistant',content:text});
+  }catch(e){
+    setTyping(false);addMsg('Ups! Problem z połączeniem z asystentem. Sprawdź internet i spróbuj ponownie. 🔄','ai');
+  }
+}
+function sendQuick(text){document.getElementById('aiInput').value=text;sendAI();}
+function addMsg(text,who){
+  const msgs=document.getElementById('aiMessages');
+  const div=document.createElement('div');
+  div.className=`msg msg-${who}`;
+  div.innerHTML=text.replace(/\n/g,'<br>');
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function setTyping(on){
+  aiTyping=on;document.getElementById('aiSendBtn').disabled=on;
+  const msgs=document.getElementById('aiMessages');
+  const existing=msgs.querySelector('.msg-typing');
+  if(on&&!existing){const t=document.createElement('div');t.className='msg msg-ai msg-typing';t.innerHTML='<span></span><span></span><span></span>';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;}
+  else if(!on&&existing)existing.remove();
+}
+function clearAiHistory(){
+  if(!confirm('Wyczyścić historię rozmowy z asystentem?'))return;
+  aiHistory=[];
+  const msgs=document.getElementById('aiMessages');
+  msgs.innerHTML='<div class="msg msg-ai">Cześć! Jestem Twoim przewodnikiem po świecie rasowych kotów 🐱<br><br>Powiedz mi o sobie — pomogę Ci znaleźć idealną rasę!</div>';
+}
+
+// ════════════════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════════════════
+const QUESTIONS=[
+  {q:'Ile czasu spędzasz w domu?',opts:['Prawie cały dzień','8–10 godzin dziennie','Dużo czasu poza domem']},
+  {q:'Jaka aktywność kota Ci odpowiada?',opts:['Spokojny drzemacz na kanapie','Umiarkowanie aktywny','Wulkan energii — ciągła zabawa']},
+  {q:'Ile czasu masz na pielęgnację sierści?',opts:['Minimum — kilka minut tygodniowo','Kilka minut dziennie','Lubię czesać i pielęgnować']},
+  {q:'Szukasz kota bardziej...',opts:['Niezależnego — niech żyje swoim życiem','Zrównoważonego','Przylepionego — zawsze przy mnie']},
+  {q:'Twoje mieszkanie to...',opts:['Małe (kawalerka lub 2 pokoje)','Standardowe (3+ pokoje)','Duże z ogrodem lub tarasem']}
+];
+let qAnswers=[],qStep=0;
+function buildQuiz(){
+  document.getElementById('qprog').innerHTML=QUESTIONS.map(()=>`<div class="q-dot"></div>`).join('');
+  renderQ(0);
+}
+function renderQ(i){
+  qStep=i;
+  document.getElementById('quiz-body').style.display='block';
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-body').innerHTML=`<div class="q-num">Pytanie ${i+1} z ${QUESTIONS.length}</div><div class="q-text">${QUESTIONS[i].q}</div><div class="q-opts">${QUESTIONS[i].opts.map((o,j)=>`<button class="q-opt" onclick="pickQ(${j})">${o}</button>`).join('')}</div>`;
+  document.querySelectorAll('.q-dot').forEach((d,k)=>d.classList.toggle('done',k<=i));
+}
+function pickQ(j){
+  const vals=[['home','mod','out'],['calm','med','act'],['low','med','high'],['indp','bal','cling'],['small','med','large']];
+  qAnswers[qStep]=vals[qStep][j];
+  document.querySelectorAll('.q-opt').forEach((b,i)=>b.classList.toggle('sel',i===j));
+  setTimeout(()=>{qStep<QUESTIONS.length-1?renderQ(qStep+1):showQuizResult();},350);
+}
+function showQuizResult(){
+  document.getElementById('quiz-body').style.display='none';
+  let breed;
+  if(qAnswers[2]==='high'&&qAnswers[1]==='act')breed=BREEDS.find(b=>b.name==='Bengalski');
+  else if(qAnswers[3]==='cling'&&qAnswers[1]==='calm')breed=BREEDS.find(b=>b.name==='Ragdoll');
+  else if(qAnswers[1]==='act'&&qAnswers[4]==='large')breed=BREEDS.find(b=>b.name==='Maine Coon');
+  else if(qAnswers[1]==='calm'&&qAnswers[2]==='low')breed=BREEDS.find(b=>b.name==='Brytyjski krótkowłosy');
+  else if(qAnswers[3]==='indp')breed=BREEDS.find(b=>b.name==='Rosyjski niebieski');
+  else breed=BREEDS.find(b=>b.name==='Syberyjski');
+  const alt=BREEDS.find(b=>b.name!==breed.name&&b.category!==breed.category)||BREEDS[1];
+  const res=document.getElementById('quiz-result');
+  res.style.display='block';
+  res.innerHTML=`<div class="quiz-result"><div class="quiz-result-emoji">${breed.emoji}</div><h3>${breed.name}</h3><p>${breed.desc}</p><div class="result-traits">${breed.tags.map(t=>`<span class="result-trait">${t}</span>`).join('')}</div><div style="font-size:.85rem;color:rgba(249,245,239,0.45);margin-bottom:1.5rem">Szacowana cena: ${breed.price}<br><span style="color:var(--gold)">💡 Alternatywa:</span> ${alt.emoji} ${alt.name}</div><button class="btn-retake" onclick="qAnswers=[];buildQuiz()">🔄 Rozwiąż ponownie</button></div>`;
+}
+
+// ════════════════════════════════════════════════════
+// SEARCH TOOL (FIX: clears mega-filter then scrolls)
+// ════════════════════════════════════════════════════
+let sFilter={text:'',cat:'wszystkie'};
+function buildSearch(){
+  const cats=['wszystkie','dlugowlose','krotkowlose','orientalne','egzotyczne'];
+  const l={wszystkie:'Wszystkie',dlugowlose:'Długowłose',krotkowlose:'Krótkowłose',orientalne:'Oriental',egzotyczne:'Exotic'};
+  document.getElementById('s-filters').innerHTML=cats.map(c=>`<button class="s-filter ${c==='wszystkie'?'active':''}" onclick="setSFilter('${c}',this)">${l[c]}</button>`).join('');
+  renderSearch();
+}
+function setSFilter(cat,btn){
+  sFilter.cat=cat;
+  document.querySelectorAll('.s-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderSearch();
+}
+function filterS(){sFilter.text=document.getElementById('s-input').value.toLowerCase();renderSearch();}
+function renderSearch(){
+  const grid=document.getElementById('s-grid');
+  const list=BREEDS.filter(b=>{
+    const mc=sFilter.cat==='wszystkie'||b.category===sFilter.cat;
+    const ms=b.name.toLowerCase().includes(sFilter.text)||b.tags.some(tg=>tg.includes(sFilter.text));
+    return mc&&ms;
+  });
+  if(!list.length){grid.innerHTML=`<div style="color:rgba(249,245,239,0.4);padding:2rem;grid-column:1/-1">Brak wyników</div>`;return;}
+  grid.innerHTML=list.map(b=>`<div class="s-breed-card" onclick="scrollToBreed('${b.name.replace(/'/g,"\\'")}')" title="Przejdź do karty rasy">
+    <div class="sbc-emoji">${b.emoji}</div>
+    <div class="sbc-name">${highlight(b.name,sFilter.text)}</div>
+    <div class="sbc-sub">${b.size} · ${b.hair}</div>
+    <div class="sbc-stars">${'★'.repeat(b.activity)}${'☆'.repeat(5-b.activity)}</div>
+  </div>`).join('');
+}
+
+// FIX: reset filters before scrolling so card is visible
+function scrollToBreed(name){
+  // reset mega grid to show all
+  megaFilter='wszystkie';megaSearch='';
+  document.querySelectorAll('.bf-btn').forEach(b=>b.classList.toggle('active',b.textContent.startsWith('Wszystkie')));
+  document.getElementById('breedsSearchInput').value='';
+  renderBreedsMega();
+  document.getElementById('wszystkie-rasy').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    const safeId=name.replace(/[^a-zA-Z0-9]/g,'_');
+    const card=document.getElementById('bmc-'+safeId);
+    if(card){
+      card.scrollIntoView({behavior:'smooth',block:'center'});
+      card.style.boxShadow='0 0 0 3px var(--gold)';
+      setTimeout(()=>card.style.boxShadow='',2000);
+    }
+  },700);
+}
+
+// ════════════════════════════════════════════════════
+// CALCULATOR
+// ════════════════════════════════════════════════════
+let calcMode='month';
+const PURCHASE_PRICES={medium:3000,large:5000,longhair:4500,hairless:6000,exotic:10000};
+function setCalcMode(m,btn){
+  calcMode=m;
+  document.querySelectorAll('.calc-mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');calcCost();
+}
+function calcCost(){
+  const f=document.getElementById('c-food').value;
+  const v=document.getElementById('c-vet').value;
+  const g=document.getElementById('c-groom').value;
+  const breed=document.getElementById('c-breed').value;
+  const years=parseInt(document.getElementById('c-years').value)||15;
+  const food={budget:120,mid:220,premium:380}[f];
+  const vet={basic:30,regular:80,full:200}[v];
+  const groom={none:0,occ:50,reg:180}[g];
+  const sand=40,extras=25;
+  const monthly=food+vet+groom+sand+extras;
+  const purchasePrice=PURCHASE_PRICES[breed]||3000;
+  const purchaseMonthly=purchasePrice/(years*12);
+  const totalMonthly=monthly+purchaseMonthly;
+  let mul,lbl,showPurchase;
+  if(calcMode==='month'){mul=1;lbl='miesięcznie';showPurchase=true;}
+  else if(calcMode==='year'){mul=12;lbl='rocznie';showPurchase=true;}
+  else{mul=years*12;lbl=`przez ${years} lat życia`;showPurchase=false;}
+  const fmt=n=>`${Math.round(n*mul).toLocaleString('pl-PL')} zł`;
+  document.getElementById('cost-rows').innerHTML=`
+    <div class="cost-row"><span class="cr-label">Karma</span><span class="cr-val">${fmt(food)}</span></div>
+    <div class="cost-row"><span class="cr-label">Weterynarz</span><span class="cr-val">${fmt(vet)}</span></div>
+    <div class="cost-row"><span class="cr-label">Pielęgnacja</span><span class="cr-val">${fmt(groom)}</span></div>
+    <div class="cost-row"><span class="cr-label">Żwirek i akcesoria</span><span class="cr-val">${fmt(sand+extras)}</span></div>
+    ${showPurchase?`<div class="cost-row"><span class="cr-label">Amortyzacja zakupu (≈${purchasePrice.toLocaleString('pl-PL')} zł / ${years} lat)</span><span class="cr-val">${fmt(purchaseMonthly)}</span></div>`:''}
+    <div class="cost-row">
+      <span class="cr-label"><strong>Łącznie ${lbl}</strong>${calcMode==='life'?`<br><small style="font-weight:400;font-size:.75rem;opacity:.6">+ ${purchasePrice.toLocaleString('pl-PL')} zł jednorazowo za zakup</small>`:''}</span>
+      <span class="cr-val"><strong>${fmt(showPurchase?totalMonthly:monthly)}</strong></span>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════
+// HODOWLE
+// ════════════════════════════════════════════════════
+let hodFilter='wszystkie';
+function buildHodowle(){
+  const feds=['wszystkie','FIFe','WCF','TICA'];
+  document.getElementById('hod-filters').innerHTML=feds.map(f=>`<button class="s-filter ${f==='wszystkie'?'active':''}" onclick="setHodFilter('${f}',this)">${f==='wszystkie'?'Wszystkie federacje':f}</button>`).join('');
+  renderHodowle();
+}
+function setHodFilter(f,btn){
+  hodFilter=f;
+  document.querySelectorAll('#hod-filters .s-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderHodowle();
+}
+function renderHodowle(){
+  const list=hodFilter==='wszystkie'?HODOWLE:HODOWLE.filter(h=>h.fed===hodFilter);
+  const fedClass={FIFe:'fed-fife',WCF:'fed-wcf',TICA:'fed-tica'};
+  document.getElementById('hod-list').innerHTML=list.map(h=>`
+    <div class="hod-card">
+      <div><div class="hc-name">${h.name}</div><div class="hc-breed">${h.breed}</div><div class="hc-loc">📍 ${h.loc}</div></div>
+      <div class="hod-right"><span class="fed-badge ${fedClass[h.fed]||'fed-fife'}">${h.fed}</span></div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════
+// RASA DNIA
+// ════════════════════════════════════════════════════
+let rodIdx=-1;
+function showRod(){
+  let i;do{i=Math.floor(Math.random()*BREEDS.length);}while(i===rodIdx&&BREEDS.length>1);
+  rodIdx=i;
+  const b=BREEDS[i];
+  const bars=[{l:'Aktywność',v:b.activity},{l:'Towarzyskość',v:b.social},{l:'Pielęgnacja',v:b.grooming}];
+  document.getElementById('rod-inner').innerHTML=`
+    <div class="rod-left">
+      <div class="rod-emoji">${b.emoji}</div>
+      <div class="rod-name">${b.name}</div>
+      <div class="rod-origin">📍 ${b.origin} · ${b.size}</div>
+      <div class="rod-desc">${b.desc}</div>
+      <div class="rod-stats">
+        <div class="rod-stat"><div class="rod-stat-val">${b.price}</div><div class="rod-stat-lbl">Cena</div></div>
+        <div class="rod-stat"><div class="rod-stat-val">${b.monthly} zł</div><div class="rod-stat-lbl">Miesięcznie</div></div>
+        <div class="rod-stat"><div class="rod-stat-val">${b.vet}</div><div class="rod-stat-lbl">Weterynarz</div></div>
+      </div>
+    </div>
+    <div class="rod-right">
+      <div class="rod-bars">${bars.map(r=>`<div class="rod-bar-row"><div class="rod-bar-lbl"><span>${r.l}</span><span>${r.v}/5</span></div><div class="rod-bar-bg"><div class="rod-bar-fill" id="rod-bar-${r.l}"></div></div></div>`).join('')}</div>
+      <div class="rod-funfact"><strong>Ciekawostka:</strong> ${b.funfact}</div>
+    </div>`;
+  // animate rod bars
+  setTimeout(()=>{
+    bars.forEach(r=>{
+      const el=document.getElementById('rod-bar-'+r.l);
+      if(el)el.style.width=`${r.v*20}%`;
+    });
+  },100);
+}
+
+// ════════════════════════════════════════════════════
+// TOOLS TABS
+// ════════════════════════════════════════════════════
+function showTool(t,btn){
+  document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tool-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tool-'+t).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════
+// FAQ
+// ════════════════════════════════════════════════════
+function toggleFaq(el){el.parentElement.classList.toggle('open');}
+
+// ════════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════════
+function toggleSettings(){
+  const p=document.getElementById('settingsPanel'),o=document.getElementById('settingsOverlay');
+  const isOpen=p.classList.toggle('open');o.classList.toggle('open',isOpen);
+}
+function closeSettings(e){if(e.target.id==='settingsOverlay')toggleSettings();}
+function setTheme(t){
+  storageSet('theme',t);
+  document.body.removeAttribute('data-theme');
+  if(t==='dark')document.body.setAttribute('data-theme','dark');
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.value===t));
+}
+function setTextSize(s){
+  storageSet('size',s);
+  document.body.setAttribute('data-text-size',s);
+  document.querySelectorAll('.size-btn').forEach(b=>b.classList.toggle('active',b.dataset.value===s));
+}
+function resetSettings(){try{localStorage.clear();}catch(e){}location.reload();}
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+initTypewriter();
+buildQuiz();
+buildSearch();
+calcCost();
+buildHodowle();
+showRod();
+initBreedsMega();
+renderFavorites();
+initScrollReveal();
+
+const savedTheme=storageGet('theme','');
+if(savedTheme&&savedTheme!=='[]')setTheme(savedTheme);
+const savedSize=storageGet('size','');
+if(savedSize&&savedSize!=='[]')setTextSize(savedSize);
+</script>
+</body>
